@@ -1,0 +1,25 @@
+{
+  "name": "Asistencia MetroSeguridad",
+  "short_name": "Asistencia MS",
+  "description": "Control de Asistencia - MetroSeguridad Serveo",
+  "start_url": "/metroseguridad/asistencia_MS.html",
+  "scope": "/metroseguridad/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080c10",
+  "theme_color": "#080c10",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
