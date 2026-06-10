@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0F1124">
+<title>Fiscalización | MetroSeguridad</title>
+<style>
+:root{--bg:#0F1124;--sf:#1A1E36;--sf2:#242952;--sf3:#2E3566;--acc:#FF4B2B;--acc-l:rgba(255,75,43,.12);--grn:#1DB86A;--grn-l:rgba(29,184,106,.12);--red:#E83A3A;--red-l:rgba(232,58,58,.12);--ylw:#F5A623;--ylw-l:rgba(245,166,35,.12);--txt:#EEF0FB;--txt2:#8E97C7;--bdr:#2A2F55;--r:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;min-height:100dvh;overflow-x:hidden}
+.hd{position:sticky;top:0;z-index:50;background:var(--sf);border-bottom:1px solid var(--bdr);padding:12px 20px 14px}
+.hd-r1{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.brand{display:flex;align-items:center;gap:6px}.pip{width:8px;height:8px;background:var(--acc);border-radius:50%}
+.brand-t{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--txt2)}
+.sc{font-size:12px;color:var(--txt2)}.sc b{color:var(--acc)}
+.sn{font-size:17px;font-weight:700;margin-bottom:10px;line-height:1.2}
+.ptrack{height:3px;background:var(--sf2);border-radius:2px;overflow:hidden}
+.pbar{height:100%;background:linear-gradient(90deg,var(--acc),#FF9975);border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.main{padding:20px 16px 100px}
+.card{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.fl{font-size:11px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--txt2);margin-bottom:8px}
+.fh{font-size:12px;color:var(--txt2);margin-top:6px}
+.fg{margin-bottom:14px;position:relative}.fg:last-child{margin-bottom:0}
+input,select,textarea{display:block;width:100%;background:var(--sf2);border:1.5px solid var(--bdr);border-radius:8px;color:var(--txt);font-size:15px;padding:13px 14px;outline:none;-webkit-appearance:none;appearance:none;font-family:inherit;transition:border-color .15s}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E97C7' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+textarea{resize:vertical;min-height:72px}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+input::placeholder,textarea::placeholder{color:var(--txt2);opacity:.6}
+.gps-btn{width:100%;background:var(--sf2);border:1.5px dashed var(--bdr);border-radius:8px;color:var(--txt2);font-size:14px;padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;font-family:inherit}
+.gps-btn.ok{border-color:var(--grn);color:var(--grn);background:var(--grn-l);border-style:solid}
+.gps-btn.warn{border-color:var(--ylw);color:var(--ylw);background:var(--ylw-l);border-style:solid}
+.gps-btn.err{border-color:var(--red);color:var(--red);background:var(--red-l);border-style:solid}
+.trow{display:flex;gap:8px}
+.tgl{flex:1;padding:13px 8px;border-radius:8px;border:1.5px solid var(--bdr);background:transparent;color:var(--txt2);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;line-height:1.2;font-family:inherit}
+.tgl:active{opacity:.7}
+.tgl.yes{background:var(--grn-l);border-color:var(--grn);color:var(--grn)}
+.tgl.no{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.tgl.na{background:var(--sf2);border-color:var(--txt2);color:var(--txt2)}
+.tgl.par{background:var(--ylw-l);border-color:var(--ylw);color:var(--ylw)}
+.ir{border:1px solid var(--bdr);border-radius:8px;padding:14px;margin-bottom:8px;background:var(--sf)}.ir:last-child{margin-bottom:0}
+.it{font-size:14px;font-weight:500;margin-bottom:10px}
+.exp{display:none;margin-top:10px}.exp.open{display:block}
+.tag{display:inline-flex;align-items:center;background:var(--acc-l);border:1px solid var(--acc);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--acc);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+.tag.dim{background:var(--sf2);border-color:var(--txt2);color:var(--txt2)}
+.sh{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.si{width:38px;height:38px;flex-shrink:0;background:var(--acc-l);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.st{font-size:17px;font-weight:700}.ss{font-size:12px;color:var(--txt2);margin-top:2px}
+.ci{margin-bottom:16px}
+.cq{font-size:14px;line-height:1.4;margin-bottom:8px;padding:12px 14px;background:var(--sf2);border-radius:8px;border-left:3px solid var(--acc)}
+/* WORKER SEARCH */
+.wdrop{position:absolute;top:calc(100% - 2px);left:0;right:0;background:var(--sf2);border:1.5px solid var(--acc);border-top:none;border-radius:0 0 8px 8px;z-index:30;max-height:220px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.wdi{padding:12px 14px;cursor:pointer;border-bottom:1px solid var(--bdr)}
+.wdi:last-child{border-bottom:none}.wdi:active{background:var(--sf3)}
+.wdn{display:block;font-size:14px;font-weight:600;color:var(--txt)}
+.wdr{display:block;font-size:12px;color:var(--txt2);margin-top:2px}
+/* UNIFORME ITEMS */
+.unif-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--sf2);border-radius:8px;margin-bottom:6px;gap:8px}
+.unif-name{font-size:13px;color:var(--txt);flex:1}
+.unif-btns{display:flex;gap:6px;flex-shrink:0}
+.unif-na{font-size:12px;color:var(--txt2);font-style:italic}
+.utgl{padding:6px 12px;border-radius:20px;border:1.5px solid var(--bdr);background:transparent;color:var(--txt2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+.utgl.falta{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.utgl.desg{background:var(--ylw-l);border-color:var(--ylw);color:var(--ylw)}
+/* SUMMARY */
+.ss-sec{margin-bottom:12px}
+.ss-t{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:8px;padding-left:2px}
+.sr{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--bdr);font-size:13px}
+.sr:last-child{border-bottom:none}
+.sk{color:var(--txt2);max-width:45%}.sv{font-weight:600;text-align:right;max-width:55%}
+.ok{color:var(--grn)}.bad{color:var(--red)}.na{color:var(--txt2)}.pa{color:var(--ylw)}
+.btn-sub{width:100%;padding:17px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--acc),#FF9975);color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:4px;letter-spacing:.4px;font-family:inherit}
+.btn-sub:active{opacity:.85}.btn-sub:disabled{opacity:.4;cursor:not-allowed}
+.btn-sec{width:100%;margin-top:10px;padding:14px;background:var(--sf2);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-size:14px;cursor:pointer;font-family:inherit}
+.nf{position:fixed;bottom:0;left:0;right:0;background:var(--sf);border-top:1px solid var(--bdr);padding:10px 16px;display:flex;gap:10px;z-index:100}
+.nb{flex:1;padding:15px;border-radius:8px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s;font-family:inherit}.nb:active{opacity:.75}
+.nb-p{background:var(--sf2);color:var(--txt2)}.nb-n{background:var(--acc);color:#fff;flex:2}
+.toast{position:fixed;top:76px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--sf2);border:1px solid var(--bdr);border-radius:20px;padding:8px 18px;font-size:13px;color:var(--txt);z-index:200;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.succ{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:32px}
+.succ.show{display:flex}
+</style>
+</head>
+<body>
+<header class="hd">
+  <div class="hd-r1">
+    <div class="brand"><div class="pip"></div><span class="brand-t">MetroSeguridad</span></div>
+    <span class="sc">Paso <b id="hNum">1</b> de 11</span>
+  </div>
+  <div class="sn" id="hName">Identificación</div>
+  <div class="ptrack"><div class="pbar" id="pbar" style="width:9.1%"></div></div>
+</header>
+<main class="main" id="mc"></main>
+<footer class="nf" id="nf">
+  <button class="nb nb-p" id="bp" onclick="prev()">← Atrás</button>
+  <button class="nb nb-n" id="bn" onclick="next()">Continuar →</button>
+</footer>
+<div class="toast" id="toast"></div>
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBdPl1DBa2rQEpiqUg1WtSEhL6NjcPpe-eV2jlkDhUwdcrBUvObwfzf1-XpBgBpNeq/exec'; // pegar URL del Apps Script
+
+// ── DATA ──────────────────────────────────────────────────────────
+const SUPERVISORES = [
+  'Alejandro Antonio Araya Ortiz',
+  'Baldomero Redulfo Silva Huenul',
+  'Carlos Enrique Salazar Aguayo',
+  'Diego Alberto Rojas Cruz',
+  'Diego Nicolas Monsalve Oyarzun',
+  'Hector Alejandro Riveros Rojas',
+  'Jose Luis Toledo Lagos',
+  'Luis Alberto Ferrando Marin',
+  'Marcelo Alfredo Ferreira Millavud',
+  'Marcelo Andres Sanchez Villagra',
+  'Marjorie Del Carmen Rocha Muñoz',
+  'Milena Cristhi Araya Paillan',
+  'Oscar Claudio Cea Martinez',
+  'Patricia Del Carmen Tejo Rodriguez',
+  'Patricio Javier Bustamante Alcapan',
+  'Ricardo Carvajal Oportus',
+  'Ricardo Eliecer Sanhueza Garces',
+  'Valeska Ivonne Aguilera Torres',
+  'Yuriko De Los Angeles Figueroa Mendez'
+];
+
+const INSPECTORES = [
+  'Alvarez Ferreira Eladio',
+  'Araya Morales Claudio',
+  'Barrientos Martinez Victor',
+  'Bravo Mora Geraldine',
+  'Herrera Huerta Victor',
+  'Morales Salas Karen',
+  'Oyarzo Mansilla Jorge',
+  'Perez Romero Fernando',
+  'Salinas Gonzalez Patricio',
+  'Otro'
+];
+
+const LINEAS = ['Línea 1','Taller','CCA','Edificio'];
+
+const ESTRUCTURA = {
+  'Línea 1':{
+    'Zona 1':['Los Dominicos','Hernando de Magallanes','Manquehue','Escuela Militar','Alcántara','El Golf','Los Leones'],
+    'Zona 2':['Pedro de Valdivia','Manuel Montt','Salvador','Universidad Católica','Santa Lucía','Universidad de Chile','La Moneda'],
+    'Zona 3':['Los Héroes L1','Los Héroes L2','República','Unión Latinoamericana','Estación Central','Universidad de Santiago','San Alberto Hurtado'],
+    'Zona 4':['Ecuador','Las Rejas','Pajaritos','Intermodal Pajaritos','Neptuno','San Pablo L5','San Pablo L1'],
+  },
+  'Taller': {'Taller Neptuno':['Taller Neptuno']},
+  'CCA':    {'CCA':['CCA']},
+  'Edificio':{'Edificio':['Edificio']}
+};
+
+const CARGOS = ['Guardia de Línea','Asistente de Servicio','Guardia Taller','Guardia Edificio','Patrulla / Táctico'];
+
+const TURNOS = ['Turno 1 (Mañana)','Turno 2 (Tarde)','Turno Noche','Turno Intermedio','Turno Corto'];
+
+const EPP_MAP = {
+  'Guardia de Línea':      ['Calzado dieléctrico','Chaleco anticorte','Quepi antigolpe'],
+  'Asistente de Servicio': ['Calzado dieléctrico'],
+  'Guardia Taller':        ['Calzado dieléctrico','Chaleco anticorte','Quepi antigolpe','Chaleco reflectante','Antiparras de seguridad'],
+  'Guardia Edificio':      ['Calzado dieléctrico','Chaleco anticorte','Quepi antigolpe'],
+  'Patrulla / Táctico':    ['Calzado dieléctrico','Chaleco anticorte','Quepi antigolpe']
+};
+
+const UNIF_MAP = {
+  'Guardia de Línea':      ['Quepi / Gorra','Camisa','Pantalón','Calzado','Polar','Cortaviento'],
+  'Asistente de Servicio': ['Quepi / Gorra','Camisa / Polera','Pantalón','Corbata','Calzado','Polar','Cortaviento','Geólogo bicolor'],
+  'Guardia Taller':        ['Quepi / Gorra','Camisa','Pantalón','Calzado','Polar','Cortaviento'],
+  'Guardia Edificio':      ['Quepi / Gorra','Camisa','Pantalón','Calzado','Polar','Cortaviento'],
+  'Patrulla / Táctico':    ['Uniforme táctico','Chaleco','Calzado','Polar','Cortaviento']
+};
+
+const PREG_G = [
+  '¿Conoce y utiliza correctamente las claves radiales del sistema TETRA?',
+  '¿Aplica el posicionamiento táctico en su puesto?',
+  '¿Conoce el procedimiento ante emergencias o evacuación de estación?',
+  '¿Conoce el protocolo ante situaciones de incivilidad o detención ciudadana?'
+];
+const PREG_A = [
+  '¿Conoce y utiliza correctamente las claves radiales del sistema TETRA?',
+  '¿Aplica los protocolos de atención al cliente según estándares Metro?',
+  '¿Maneja información de red Metro para orientar a los usuarios?',
+  '¿Conoce el procedimiento ante una emergencia o evacuación de estación?'
+];
+
+// Nómina completa (366 trabajadores)
+const TW = [
+  {n:'Adrian Andres Castillo Rozas', r:'17.309.663-1', c:'Guardia de Línea'},
+  {n:'Alejandra Belen Moreno Otarola', r:'19.883.797-0', c:'Guardia de Línea'},
+  {n:'Alejandra Marcela Diaz Bravo', r:'13.062.777-3', c:'Asistente de Servicio'},
+  {n:'Alejandro Ignacio Fernandez Quintanilla', r:'17.319.576-1', c:'Guardia de Línea'},
+  {n:'Alexa Giannina Marin Cabeza', r:'21.811.252-8', c:'Asistente de Servicio'},
+  {n:'Alicia Nicole Chavez Galvez', r:'17.304.685-5', c:'Asistente de Servicio'},
+  {n:'Alicia Noemi Morales Abadie', r:'17.950.142-2', c:'Asistente de Servicio'},
+  {n:'Alonso Javier Torres Mc Millan', r:'21.845.965-K', c:'Asistente de Servicio'},
+  {n:'Alonso Osvaldo Ricouz Soto', r:'6.653.139-2', c:'Guardia Edificio'},
+  {n:'Alvaro Manuel Espinosa Sanhueza', r:'20.209.460-0', c:'Guardia de Línea'},
+  {n:'Amanda Isadora Perez Perez', r:'21.660.996-4', c:'Asistente de Servicio'},
+  {n:'Amaro Nahuel Salazar Labra', r:'20.977.032-6', c:'Asistente de Servicio'},
+  {n:'Andrea Beatriz Fuentes Poblete', r:'17.103.145-1', c:'Asistente de Servicio'},
+  {n:'Andrea Carolina Dinamarca Gallardo', r:'17.069.594-1', c:'Guardia de Línea'},
+  {n:'Andres Mauricio Dominguez Gonzalez', r:'17.598.970-6', c:'Guardia Edificio'},
+  {n:'Angela Maricela Vergara Peralta', r:'18.873.909-1', c:'Asistente de Servicio'},
+  {n:'Angelina Michel Frias Gomez', r:'15.436.266-5', c:'Asistente de Servicio'},
+  {n:'Angellina Paz Riquelme Campos', r:'21.563.231-8', c:'Guardia de Línea'},
+  {n:'Anita Belen Figueroa Alvarado', r:'18.277.597-5', c:'Guardia de Línea'},
+  {n:'Annais Esperanza Rebolledo Galvez', r:'20.835.670-4', c:'Asistente de Servicio'},
+  {n:'Antonella Evelyn Isidora Mores Garrido', r:'22.609.052-5', c:'Asistente de Servicio'},
+  {n:'Antonia Elena Soledad Uribe Serrano', r:'20.172.768-5', c:'Guardia de Línea'},
+  {n:'Antonia Ignacia Cortes Olivares', r:'21.700.874-3', c:'Asistente de Servicio'},
+  {n:'Antonio Italo Cornejo Molina', r:'17.878.930-9', c:'Guardia Taller'},
+  {n:'Antony Andres Alexander Silva Tapia', r:'21.369.209-7', c:'Asistente de Servicio'},
+  {n:'Aracely Baza Quiñones', r:'20.815.217-3', c:'Asistente de Servicio'},
+  {n:'Arelis Tamar Rodriguez Palma', r:'13.915.755-9', c:'Guardia de Línea'},
+  {n:'Ariadna Emily Gozaine Suarez', r:'26.951.325-K', c:'Asistente de Servicio'},
+  {n:'Armin Victor Hormazabal Hormazabal', r:'19.218.856-3', c:'Guardia de Línea'},
+  {n:'Arthur Erwin Schultzki Gianetti', r:'13.483.297-5', c:'Asistente de Servicio'},
+  {n:'Arturo Manuel Landero Poblete', r:'7.200.778-6', c:'Guardia Edificio'},
+  {n:'Augusto Andres Fuentes Leal', r:'18.762.055-4', c:'Guardia de Línea'},
+  {n:'Axel Louis Castillo Paredes', r:'22.224.928-7', c:'Guardia de Línea'},
+  {n:'Barbara Rocio Vallejos Mora', r:'16.264.130-1', c:'Guardia de Línea'},
+  {n:'Bastian Alexis Chavez Cabezas', r:'20.078.469-3', c:'Guardia de Línea'},
+  {n:'Bastian Andres Soto Salazar', r:'19.914.229-1', c:'Guardia Edificio'},
+  {n:'Benjamin Fernando Manriquez Saavedra', r:'20.592.519-8', c:'Asistente de Servicio'},
+  {n:'Benjamin Humberto Henriquez Peña', r:'20.615.732-1', c:'Asistente de Servicio'},
+  {n:'Benjamin Ignacio Aguilera Soto', r:'22.313.576-5', c:'Asistente de Servicio'},
+  {n:'Benjamin Ignacio Ceballos Ibañez', r:'21.539.688-6', c:'Guardia de Línea'},
+  {n:'Betzabe Jocelyn Valdes Moya', r:'15.538.319-4', c:'Asistente de Servicio'},
+  {n:'Brandon Thomas Jaime Morales', r:'20.828.732-K', c:'Guardia de Línea'},
+  {n:'Bryan Alejandro Molina Cea', r:'19.443.200-3', c:'Guardia de Línea'},
+  {n:'Camila Alejandra Retamal Cornejo', r:'21.566.084-2', c:'Asistente de Servicio'},
+  {n:'Camila Andrea Galfan Calbul', r:'18.847.922-7', c:'Asistente de Servicio'},
+  {n:'Camila Constanza Muñoz Castro', r:'19.278.370-4', c:'Asistente de Servicio'},
+  {n:'Camila Estefany Sandoval Jimenez', r:'20.041.285-0', c:'Asistente de Servicio'},
+  {n:'Camila Margarita Cancino Meriño', r:'20.335.768-0', c:'Asistente de Servicio'},
+  {n:'Camila Margarita Zeleme Zeleme', r:'21.491.118-3', c:'Guardia de Línea'},
+  {n:'Camila Nicol Castro Acevedo', r:'19.571.770-2', c:'Asistente de Servicio'},
+  {n:'Camila Paz Orellana Orellana', r:'18.054.248-5', c:'Guardia de Línea'},
+  {n:'Camila Scarlett Rosales Meirelles', r:'19.221.258-8', c:'Asistente de Servicio'},
+  {n:'Carlos Alberto Marquez Areyuna', r:'11.947.875-8', c:'Guardia Taller'},
+  {n:'Carlos Andres Guarda Rivera', r:'20.532.725-8', c:'Guardia de Línea'},
+  {n:'Carlos Antonio Arenas Reyes', r:'11.656.648-6', c:'Guardia de Línea'},
+  {n:'Carlos Ivan Zamorano Martinez', r:'9.355.277-6', c:'Guardia Taller'},
+  {n:'Carola Elizabeth Cuadra Mujica', r:'11.376.127-K', c:'Guardia de Línea'},
+  {n:'Carolan Lissbeth  Pereira Fontalba', r:'18.192.256-7', c:'Asistente de Servicio'},
+  {n:'Carolina Alejandra Baeza Faune', r:'19.064.183-K', c:'Asistente de Servicio'},
+  {n:'Carolina Andrea Ortega Martinez', r:'18.278.209-2', c:'Guardia de Línea'},
+  {n:'Carolina Soledad Bruna Bruna', r:'13.251.663-4', c:'Asistente de Servicio'},
+  {n:'Catalina Antonia Cruz Madrid', r:'21.250.696-6', c:'Asistente de Servicio'},
+  {n:'Catalina Belen Lara Piñeiro', r:'21.007.278-0', c:'Guardia de Línea'},
+  {n:'Catalina Constanza Rios Moya', r:'22.535.427-8', c:'Asistente de Servicio'},
+  {n:'Catalina Ignacia Hurtado Yañez', r:'21.359.356-0', c:'Asistente de Servicio'},
+  {n:'Catalina Millaray Santana Oyarzun', r:'21.807.375-1', c:'Guardia de Línea'},
+  {n:'Cecilia De Las Mercedes Navarro Vallejos', r:'11.294.631-4', c:'Asistente de Servicio'},
+  {n:'Cecilia Elena Cornejo Molina', r:'6.427.614-K', c:'Guardia de Línea'},
+  {n:'Cesar Andres Puga Gonzalez', r:'8.860.032-0', c:'Guardia Edificio'},
+  {n:'Cinthia Yotsslliam Villegas Gajardo', r:'19.707.615-1', c:'Guardia de Línea'},
+  {n:'Claudia De Las Mercedes Contreras Acevedo', r:'10.761.978-K', c:'Asistente de Servicio'},
+  {n:'Claudia Valeria Lopez Ovalle', r:'21.482.110-9', c:'Asistente de Servicio'},
+  {n:'Claudio Adolfo Machuca Rojas', r:'18.055.286-3', c:'Asistente de Servicio'},
+  {n:'Constanza Andrea Vega Aguilera', r:'18.440.485-0', c:'Guardia de Línea'},
+  {n:'Constanza Belen Alarcon Alarcon', r:'18.796.024-K', c:'Asistente de Servicio'},
+  {n:'Constanza Javiera Aguirre Rodriguez', r:'18.661.904-8', c:'Asistente de Servicio'},
+  {n:'Constanza Mera Marquez', r:'18.480.240-6', c:'Asistente de Servicio'},
+  {n:'Constanza Paz Avendaño Duran', r:'18.089.857-3', c:'Asistente de Servicio'},
+  {n:'Coraly Rosa Scheid Aqueveque', r:'12.194.324-7', c:'Guardia de Línea'},
+  {n:'Cristal Belen Ponce Roca', r:'19.439.627-9', c:'Asistente de Servicio'},
+  {n:'Cristhofer Ignacio Carmona Bravo', r:'20.455.066-2', c:'Guardia Edificio'},
+  {n:'Cristian Alejandro Gajardo Toro', r:'19.747.430-0', c:'Guardia Edificio'},
+  {n:'Cristian Alejandro Peñaloza Fuentes', r:'18.794.474-0', c:'Guardia de Línea'},
+  {n:'Cristian Renato Seguel Seguel', r:'15.746.918-5', c:'Guardia Edificio'},
+  {n:'Cristina Valeska Muñoz Castro', r:'13.497.828-7', c:'Asistente de Servicio'},
+  {n:'Cristopher Alexis Briceño Tellez', r:'17.482.556-4', c:'Guardia Edificio'},
+  {n:'Cristopher Antonio Alvear Jara', r:'16.751.019-1', c:'Guardia Edificio'},
+  {n:'Cristopher Heraldo Badilla Bravo', r:'21.212.253-K', c:'Guardia de Línea'},
+  {n:'Daniel Alejandro Catripan Cariman', r:'21.821.325-1', c:'Guardia de Línea'},
+  {n:'Daniel Alexander Martinez Duarte', r:'19.558.432-K', c:'Guardia Taller'},
+  {n:'Daniel Alonso Mena Ayan', r:'18.695.778-4', c:'Guardia de Línea'},
+  {n:'Daniel Mauricio Andaur Campos', r:'19.681.495-7', c:'Guardia de Línea'},
+  {n:'Daniela Alejandra Del Carmen Vargas Moller', r:'19.843.353-5', c:'Guardia de Línea'},
+  {n:'Daniela Alejandra Villalobos Quijada', r:'19.430.386-6', c:'Asistente de Servicio'},
+  {n:'Daniela Andrea Matamala Villegas', r:'15.618.290-7', c:'Guardia de Línea'},
+  {n:'Daniela Carolina Montero Sepulveda', r:'21.262.399-7', c:'Asistente de Servicio'},
+  {n:'Daniela Karina Cabal Azocar', r:'15.842.485-1', c:'Asistente de Servicio'},
+  {n:'Danilo Elias Saez Orobia', r:'10.243.331-9', c:'Guardia Edificio'},
+  {n:'David Alberto Flores Cruz', r:'25.614.996-6', c:'Guardia Taller'},
+  {n:'David Esteban Muñoz Cornejo', r:'22.347.695-3', c:'Asistente de Servicio'},
+  {n:'Dayana Prado Reina', r:'28.121.588-4', c:'Asistente de Servicio'},
+  {n:'Dayrko Felipe Ignacio Apablaza Galvez', r:'20.390.480-0', c:'Guardia Taller'},
+  {n:'Debora Erlin Campos Benigno', r:'25.810.268-1', c:'Asistente de Servicio'},
+  {n:'Denisse Gisselle Herrera Gonzalez', r:'19.161.604-9', c:'Asistente de Servicio'},
+  {n:'Denisse Jesus Carilao Leiva', r:'20.332.874-5', c:'Asistente de Servicio'},
+  {n:'Diego Benjamin Medina Venegas', r:'21.604.171-2', c:'Guardia de Línea'},
+  {n:'Dionisio Segundo Bastias Salinas', r:'10.586.989-4', c:'Guardia de Línea'},
+  {n:'Edgardo Francisco Lorca Zavala', r:'9.944.496-7', c:'Guardia de Línea'},
+  {n:'Eduardo Adolfo Cruz Loarte', r:'26.541.969-0', c:'Guardia de Línea'},
+  {n:'Eduardo Alberto Ruz Gonzalez', r:'10.691.750-7', c:'Asistente de Servicio'},
+  {n:'Eduardo Andres Zapata Pacheco', r:'17.786.559-1', c:'Asistente de Servicio'},
+  {n:'Eduardo Esteban Fernandez Scheid', r:'19.479.337-5', c:'Guardia de Línea'},
+  {n:'Edwin David Ponce Elias', r:'24.893.183-3', c:'Guardia de Línea'},
+  {n:'Edwin Dayan Moreno Guzman', r:'25.700.363-9', c:'Guardia de Línea'},
+  {n:'Elena Elizabeth Garcia Rubio', r:'15.485.475-4', c:'Asistente de Servicio'},
+  {n:'Elizabeth Yazmin Rodriguez Araya', r:'15.932.921-6', c:'Asistente de Servicio'},
+  {n:'Emmanuel Alejandro Vilches Sanchez', r:'18.356.014-K', c:'Guardia Edificio'},
+  {n:'Erasmo Richard Pinares Pincheira', r:'11.404.768-6', c:'Asistente de Servicio'},
+  {n:'Erika Patricia Galarce Gutierrez', r:'17.667.455-5', c:'Guardia de Línea'},
+  {n:'Escarlet Antonia Peña Lucero', r:'20.281.005-5', c:'Guardia de Línea'},
+  {n:'Esteban Danilo Montero Sepulveda', r:'22.608.565-3', c:'Asistente de Servicio'},
+  {n:'Esteban Jetro Carrizo Morales', r:'20.379.805-9', c:'Asistente de Servicio'},
+  {n:'Estefania Sayen Fernandez Guzman', r:'21.993.759-8', c:'Asistente de Servicio'},
+  {n:'Fabian Alejandro Gajardo Toro', r:'17.305.829-2', c:'Guardia Taller'},
+  {n:'Fabian Alejandro Retamal Lorca', r:'17.575.592-6', c:'Guardia de Línea'},
+  {n:'Fabian Patricio Acuña Cuellar', r:'20.048.844-K', c:'Asistente de Servicio'},
+  {n:'Fabiola Andrea Navarrete Gonzalez', r:'11.523.227-4', c:'Asistente de Servicio'},
+  {n:'Fabiola Pachajaya Condori', r:'23.505.033-1', c:'Asistente de Servicio'},
+  {n:'Felipe Andres Miranda Navarro', r:'18.674.673-2', c:'Guardia Edificio'},
+  {n:'Felipe Carlos Lopez Mercado', r:'8.715.119-0', c:'Guardia Taller'},
+  {n:'Fernanda Andrea Galleguillos Caniulao', r:'20.815.335-8', c:'Asistente de Servicio'},
+  {n:'Fernanda Antonia Diaz Alvarez', r:'21.872.173-7', c:'Asistente de Servicio'},
+  {n:'Fernanda Oriana Contreras Zamora', r:'18.457.181-1', c:'Asistente de Servicio'},
+  {n:'Francesca Daniela Moya Salgado', r:'21.254.280-6', c:'Asistente de Servicio'},
+  {n:'Francia Fabiola Ruiz Oregon', r:'11.318.365-9', c:'Guardia de Línea'},
+  {n:'Francisca Andrea Maturana Medina', r:'21.130.077-9', c:'Asistente de Servicio'},
+  {n:'Francisca Carolina Carrillo Merino', r:'20.453.799-2', c:'Asistente de Servicio'},
+  {n:'Francisca De Las Mercedes Sepulveda Sepulveda', r:'21.688.401-9', c:'Guardia de Línea'},
+  {n:'Francisca Dorilus', r:'26.039.500-9', c:'Asistente de Servicio'},
+  {n:'Francisco Ignacio Martinez Cordovez', r:'19.054.453-2', c:'Guardia de Línea'},
+  {n:'Francisco Ignacio Vera Araya', r:'18.456.035-6', c:'Guardia Taller'},
+  {n:'Francisco Jose Soto Lagos', r:'16.069.094-1', c:'Asistente de Servicio'},
+  {n:'Franco Ignacio Mella Gonzalez', r:'19.792.483-7', c:'Guardia de Línea'},
+  {n:'Fredy Orlando Barria Silva', r:'10.500.214-9', c:'Guardia de Línea'},
+  {n:'Gabriel Alejandro Ortiz Villarroel', r:'21.241.938-9', c:'Asistente de Servicio'},
+  {n:'Gabriel Alexis Guzman Lorca', r:'22.507.238-8', c:'Asistente de Servicio'},
+  {n:'Gabriel Antonio Kremar Rodriguez', r:'11.875.373-9', c:'Guardia de Línea'},
+  {n:'Gerson Alexis Reyes Cerda', r:'18.571.117-K', c:'Asistente de Servicio'},
+  {n:'Giovanni Alfredo Viñosa Mediomundo', r:'26.080.957-1', c:'Asistente de Servicio'},
+  {n:'Gisela Militza Guerrero Olave', r:'9.902.080-6', c:'Guardia de Línea'},
+  {n:'Gissella Macarena Aravena Poblete', r:'16.392.667-9', c:'Guardia de Línea'},
+  {n:'Gloria Hortencia Sobarzo Romero', r:'10.449.144-8', c:'Guardia de Línea'},
+  {n:'Gustavo Sunil Machado Andana', r:'21.096.894-6', c:'Asistente de Servicio'},
+  {n:'Harold Andres Varela Gonzalez', r:'26.731.155-2', c:'Guardia Taller'},
+  {n:'Hector Alejandro Acuña Vertiz-Blanco', r:'10.738.186-4', c:'Guardia Taller'},
+  {n:'Hector Rodrigo Gonzalez Garrido', r:'13.439.055-7', c:'Guardia de Línea'},
+  {n:'Herman Rigoberto Fernandez Orrego', r:'9.766.164-2', c:'Guardia de Línea'},
+  {n:'Hoimar Riascos Quijano', r:'25.226.711-5', c:'Guardia Edificio'},
+  {n:'Hugo Rigoberto Vasquez Retamal', r:'12.405.117-7', c:'Asistente de Servicio'},
+  {n:'Ibelise De Las Mercedes Calderon Zapata', r:'10.257.119-3', c:'Asistente de Servicio'},
+  {n:'Ignacio Alejandro Tobar Villagra', r:'21.239.878-0', c:'Asistente de Servicio'},
+  {n:'Ignacio Barra Jaque', r:'20.938.584-8', c:'Guardia Edificio'},
+  {n:'Ignacio Leonardo Schweinsteiger Carreño', r:'18.063.709-5', c:'Guardia Edificio'},
+  {n:'Ingrid Eugenia Cayuqueo Zapata', r:'13.607.690-6', c:'Guardia de Línea'},
+  {n:'Irlu Rosa Reyes De Viñossa', r:'26.068.644-5', c:'Asistente de Servicio'},
+  {n:'Isabel Andrea Rojas Urquiola', r:'22.173.264-2', c:'Guardia de Línea'},
+  {n:'Isabel Del Carmen Diaz Gonzalez', r:'25.246.584-7', c:'Asistente de Servicio'},
+  {n:'Isidora Antonia Cisternas Neira', r:'21.266.648-3', c:'Asistente de Servicio'},
+  {n:'Isidora Ignacia Sepulveda Alvarez', r:'20.538.806-0', c:'Asistente de Servicio'},
+  {n:'Ismael Alonso Morales Avello', r:'21.266.918-0', c:'Guardia Edificio'},
+  {n:'Ismael Erickson Donoso Galvez', r:'20.055.975-4', c:'Guardia de Línea'},
+  {n:'Ivan Alfredo Ramirez Pozo', r:'16.878.053-2', c:'Guardia Taller'},
+  {n:'Ivan Carlos Araya Guevara', r:'10.320.489-5', c:'Asistente de Servicio'},
+  {n:'Jacqueline Vazquez', r:'28.600.897-6', c:'Asistente de Servicio'},
+  {n:'Jaime Alejandro Rezuc Bermudez', r:'13.334.415-2', c:'Guardia Taller'},
+  {n:'Jaime Antonio Ordenes Caro', r:'19.240.720-6', c:'Asistente de Servicio'},
+  {n:'Jaime Enrique Vejares Velasquez', r:'8.140.913-7', c:'Asistente de Servicio'},
+  {n:'Jaison Walter Castro Ibarra', r:'19.706.185-5', c:'Guardia Edificio'},
+  {n:'Jammes Alejandro Duran San Martin', r:'21.186.800-7', c:'Asistente de Servicio'},
+  {n:'Janiel Yamil Acuña Soto', r:'19.430.718-7', c:'Guardia de Línea'},
+  {n:'Javier Ignacio Dominguez Gonzalez', r:'18.954.444-8', c:'Guardia Edificio'},
+  {n:'Javier Ignacio Muñoz Duran', r:'18.355.970-2', c:'Guardia de Línea'},
+  {n:'Javiera Amapola Gonzalez Campos', r:'19.563.210-3', c:'Asistente de Servicio'},
+  {n:'Javiera Fernanda Guerra Avalos', r:'21.217.237-5', c:'Asistente de Servicio'},
+  {n:'Javiera Fernanda Valdes Zamora', r:'19.925.145-7', c:'Asistente de Servicio'},
+  {n:'Jeannette Andrea Brevis Gonzalez', r:'15.358.374-9', c:'Guardia de Línea'},
+  {n:'Jeannette Margarita Gonzalez Paiva', r:'9.660.349-5', c:'Asistente de Servicio'},
+  {n:'Jennifer Alejandra Echeverria Rain', r:'19.272.444-9', c:'Guardia de Línea'},
+  {n:'Joaquin Alejandro Castillo Valdes', r:'21.538.730-5', c:'Asistente de Servicio'},
+  {n:'Joaquin Ignacio Aravena Opazo', r:'21.570.838-1', c:'Asistente de Servicio'},
+  {n:'Johan Jersenio Villena Tito', r:'24.086.993-4', c:'Guardia de Línea'},
+  {n:'Jordan Alexander Cardoza Vargas', r:'19.905.776-6', c:'Asistente de Servicio'},
+  {n:'Jordan Matias Flores Valencia', r:'19.382.683-0', c:'Guardia de Línea'},
+  {n:'Jordan Michelle Cortes Godoy', r:'18.403.828-5', c:'Guardia Edificio'},
+  {n:'Jorge Nicolas Del Carpio Bastias', r:'19.801.503-2', c:'Guardia Edificio'},
+  {n:'Jose Ignacio Gayes Muñoz', r:'21.091.127-8', c:'Guardia Taller'},
+  {n:'Jose Leopoldo Requena Ortega', r:'9.609.831-6', c:'Asistente de Servicio'},
+  {n:'Jose Miguel Riquelme Devia', r:'19.992.263-7', c:'Asistente de Servicio'},
+  {n:'Joselyn Olenka Susanibar Lindo', r:'23.376.000-5', c:'Asistente de Servicio'},
+  {n:'Joset Camila Vidal Calipuy', r:'25.661.440-5', c:'Asistente de Servicio'},
+  {n:'Juan Carlos Valdes Tranamil', r:'19.011.096-6', c:'Guardia Edificio'},
+  {n:'Judith Jean', r:'25.895.037-2', c:'Asistente de Servicio'},
+  {n:'Julian Ignacio Reveco Zuñiga', r:'21.402.261-3', c:'Asistente de Servicio'},
+  {n:'Julio Cesar Aguilera Ocares', r:'7.190.164-5', c:'Guardia Taller'},
+  {n:'Karen Alejandra Mejias Moreno', r:'16.040.876-6', c:'Guardia de Línea'},
+  {n:'Karina Alexandra Aranguiz Vicencio', r:'16.715.236-8', c:'Guardia de Línea'},
+  {n:'Karla Daniela Sepulveda Miranda', r:'15.791.954-7', c:'Asistente de Servicio'},
+  {n:'Karla Natalia Martinez Vilchez', r:'12.677.244-0', c:'Asistente de Servicio'},
+  {n:'Karla Victoria Perez Perez', r:'21.075.927-1', c:'Asistente de Servicio'},
+  {n:'Karol Andrea Quijada Plaza', r:'20.109.384-8', c:'Guardia de Línea'},
+  {n:'Katherine Andrea Curiman Lezana', r:'19.182.839-9', c:'Asistente de Servicio'},
+  {n:'Katherine Fernanda Cantillana Vasquez', r:'19.877.596-7', c:'Asistente de Servicio'},
+  {n:'Katherine Gisselle Riquelme Contreras', r:'17.768.220-9', c:'Guardia de Línea'},
+  {n:'Katherine Noemi Villalobos Chiroque', r:'20.614.073-9', c:'Asistente de Servicio'},
+  {n:'Kiara Rossely  Canchanya Gutierrez', r:'23.540.777-9', c:'Guardia de Línea'},
+  {n:'Larimar Abreu Ponceano', r:'24.944.102-3', c:'Asistente de Servicio'},
+  {n:'Lenning Andres Chamorro Donoso', r:'18.080.159-6', c:'Asistente de Servicio'},
+  {n:'Leoncio Alejandro Martinez Contreras', r:'10.884.731-K', c:'Guardia Edificio'},
+  {n:'Leslie Edith Sepulveda Gonzalez', r:'15.328.402-4', c:'Guardia de Línea'},
+  {n:'Lixbeth Zefora Palacios Hernandez', r:'20.160.615-2', c:'Guardia de Línea'},
+  {n:'Liz Mireya Huacayco Villogas', r:'24.068.390-3', c:'Guardia de Línea'},
+  {n:'Lizbeth Maria Jose Leon Fuentes', r:'17.391.414-8', c:'Guardia de Línea'},
+  {n:'Loreto Del Carmen Escobar Figueroa', r:'16.233.469-7', c:'Guardia de Línea'},
+  {n:'Lucienne Pierre', r:'25.900.531-0', c:'Asistente de Servicio'},
+  {n:'Lucy Yaneth Florez Jerez', r:'26.092.035-9', c:'Guardia de Línea'},
+  {n:'Luis Alberto Gonzalez Nuñez', r:'7.846.023-7', c:'Guardia Taller'},
+  {n:'Luis Alberto Tobar Soto', r:'12.635.413-4', c:'Guardia Edificio'},
+  {n:'Luis Antonio Ulloa Zuñiga', r:'21.528.292-9', c:'Asistente de Servicio'},
+  {n:'Luis David Paiva Cortes', r:'22.011.561-5', c:'Guardia de Línea'},
+  {n:'Luis Emerson Rodriguez Astudillo', r:'20.000.895-2', c:'Asistente de Servicio'},
+  {n:'Luis Guillermo Parra Llaulen', r:'16.621.709-1', c:'Guardia de Línea'},
+  {n:'Luis Guillermo Rojas Seguin', r:'12.905.483-2', c:'Asistente de Servicio'},
+  {n:'Luis Jordan Valverde Lanas', r:'20.433.449-8', c:'Asistente de Servicio'},
+  {n:'Luperfina Gladys Olivares Acuña', r:'11.165.719-K', c:'Asistente de Servicio'},
+  {n:'Luz Evelyn Frias Alvarez', r:'15.844.168-3', c:'Guardia de Línea'},
+  {n:'Luz Maria Carcamo Concha', r:'14.460.288-9', c:'Guardia de Línea'},
+  {n:'Manuel Alejandro Jofre Aranda', r:'19.301.070-9', c:'Asistente de Servicio'},
+  {n:'Manuel Ignacio Reyes Queipo', r:'19.785.920-2', c:'Asistente de Servicio'},
+  {n:'Manuel Jesus Lopez Sepulveda', r:'16.412.705-2', c:'Asistente de Servicio'},
+  {n:'Marcel Ignacio Dapremont Taiva', r:'20.536.231-2', c:'Guardia de Línea'},
+  {n:'Marcela Del Carmen Lopez Rios', r:'11.489.017-0', c:'Asistente de Servicio'},
+  {n:'Marcela Patricia Bolarini Vasquez', r:'12.502.735-0', c:'Asistente de Servicio'},
+  {n:'Marcela Pia Yañez Ramirez', r:'12.647.504-7', c:'Asistente de Servicio'},
+  {n:'Marcelo Enrique Contador Moraga', r:'17.303.780-5', c:'Asistente de Servicio'},
+  {n:'Marcelo Fabian Rojas Ovalle', r:'9.673.328-3', c:'Guardia Edificio'},
+  {n:'Marco Aurelio Diaz Palma', r:'10.496.629-2', c:'Guardia de Línea'},
+  {n:'Marcos Andres Garay Cepeda', r:'13.839.021-7', c:'Guardia Edificio'},
+  {n:'Margarita Ester Diaz Espinoza', r:'14.128.301-4', c:'Guardia de Línea'},
+  {n:'Maria Alejandra Puvogel Ortiz', r:'16.711.733-3', c:'Asistente de Servicio'},
+  {n:'Maria Auxiliadora Sanchez Medina', r:'27.911.000-5', c:'Asistente de Servicio'},
+  {n:'Maria Belen Flores Henriquez', r:'16.742.229-2', c:'Guardia de Línea'},
+  {n:'Maria Belen Icarte Guerra', r:'21.080.406-4', c:'Asistente de Servicio'},
+  {n:'Maria Estefania Pilar Zapata Pacheco', r:'16.385.605-0', c:'Asistente de Servicio'},
+  {n:'Maria Fernanda Muñoz Castillo', r:'22.093.758-5', c:'Asistente de Servicio'},
+  {n:'Maria Isabel Solis Vera', r:'21.631.956-7', c:'Asistente de Servicio'},
+  {n:'Maria Isabel Toledo Lillo', r:'13.383.995-K', c:'Guardia de Línea'},
+  {n:'Maria Jose Carreño Carreño', r:'17.562.364-7', c:'Asistente de Servicio'},
+  {n:'Maria Jose Hernandez Albornoz', r:'16.648.502-9', c:'Asistente de Servicio'},
+  {n:'Maria Paulina Zavala Contuliano', r:'9.904.797-6', c:'Asistente de Servicio'},
+  {n:'Mariana Sandra Osorio Guzman', r:'11.263.221-2', c:'Asistente de Servicio'},
+  {n:'Maribel Del Carmen Aguilera Torres', r:'14.361.908-7', c:'Asistente de Servicio'},
+  {n:'Mario Alfredo Liapiz Jara', r:'9.000.697-5', c:'Asistente de Servicio'},
+  {n:'Mario Antonio Valderrama Ramirez', r:'10.799.472-6', c:'Asistente de Servicio'},
+  {n:'Marisel Ester Acuña Peña', r:'12.478.925-7', c:'Asistente de Servicio'},
+  {n:'Marisol Del Carmen Bastias Loyola', r:'13.487.009-5', c:'Asistente de Servicio'},
+  {n:'Marisol Uberlinda Muñoz Gonzalez', r:'9.409.590-5', c:'Guardia de Línea'},
+  {n:'Martina Antonia Garrido Pizarro', r:'20.837.937-2', c:'Asistente de Servicio'},
+  {n:'Martina Paulette Aninguir Aguilar', r:'22.677.060-7', c:'Asistente de Servicio'},
+  {n:'Mary Yiseth Moreno Ibarguen', r:'27.090.073-9', c:'Asistente de Servicio'},
+  {n:'Marylin Constanza Mellado Cortes', r:'17.565.399-6', c:'Guardia de Línea'},
+  {n:'Matias Andres Godoy Barra', r:'20.434.853-7', c:'Guardia Taller'},
+  {n:'Matias Osvaldo Herrera Plaza', r:'19.409.750-6', c:'Guardia Taller'},
+  {n:'Matias Sebastian Merino Acevedo', r:'22.174.808-5', c:'Asistente de Servicio'},
+  {n:'Mauricio Andres Saavedra Mancilla', r:'17.665.449-K', c:'Guardia Edificio'},
+  {n:'Mauricio Eduardo Arancibia Hurtado', r:'12.071.395-7', c:'Asistente de Servicio'},
+  {n:'Mauricio Ernesto Soto Araya', r:'19.235.963-5', c:'Guardia Edificio'},
+  {n:'Mauricio Esteban Coronado Canales', r:'20.762.117-K', c:'Guardia de Línea'},
+  {n:'Maxcene Jn-Felix', r:'25.888.699-2', c:'Guardia de Línea'},
+  {n:'Maximiliano Israel Gonzalez Arriaran', r:'20.729.795-K', c:'Asistente de Servicio'},
+  {n:'Melanie Roxana Rivera Paillal', r:'18.837.376-3', c:'Guardia de Línea'},
+  {n:'Melany Marion Valat Valle', r:'20.299.927-1', c:'Guardia de Línea'},
+  {n:'Merly Altamirano Perez', r:'25.544.357-7', c:'Guardia de Línea'},
+  {n:'Michael Bryan Reyes Muñoz', r:'18.976.873-7', c:'Asistente de Servicio'},
+  {n:'Michel Angela Sepulveda Peña', r:'21.176.519-4', c:'Asistente de Servicio'},
+  {n:'Michelle Anyela Longobardi Montero', r:'22.685.827-K', c:'Asistente de Servicio'},
+  {n:'Miguel Alejandro Castro Silva', r:'15.867.470-K', c:'Guardia Edificio'},
+  {n:'Miguel Angel Gonzalez Gomez', r:'20.207.435-9', c:'Guardia Edificio'},
+  {n:'Miguel Angel Lucas Hidalgo Igor', r:'18.627.641-8', c:'Guardia Taller'},
+  {n:'Miguel Angel Torrejon Medina', r:'20.397.008-0', c:'Asistente de Servicio'},
+  {n:'Miguelina Badio', r:'26.210.672-1', c:'Guardia de Línea'},
+  {n:'Mirsol Daniela Catalan Herrera', r:'16.646.402-1', c:'Asistente de Servicio'},
+  {n:'Mirta Ines Treufu Treimun', r:'13.966.476-0', c:'Asistente de Servicio'},
+  {n:'Moises Diego Sebastian Ramirez Villarroel', r:'20.762.509-4', c:'Guardia Taller'},
+  {n:'Nadia Flor Vasquez Faundez', r:'18.738.689-6', c:'Asistente de Servicio'},
+  {n:'Nancy Palma Garrido', r:'9.743.804-8', c:'Asistente de Servicio'},
+  {n:'Nathanael Esteban Castillo Alvarado', r:'19.360.949-K', c:'Guardia de Línea'},
+  {n:'Nicolas Alberto Cantillana Leon', r:'16.545.709-9', c:'Guardia de Línea'},
+  {n:'Nicolas Andres Arenas Llanos', r:'20.238.224-K', c:'Asistente de Servicio'},
+  {n:'Nicolas Fabian Ricardo Navarrete Fuentes', r:'21.518.457-9', c:'Asistente de Servicio'},
+  {n:'Nikolas Antonio Elos Ibarra', r:'19.220.534-4', c:'Asistente de Servicio'},
+  {n:'Nissa Aomi Caceres Barriga', r:'22.128.526-3', c:'Asistente de Servicio'},
+  {n:'Noelia Antonia Miranda Valdenegro', r:'22.091.496-8', c:'Asistente de Servicio'},
+  {n:'Nora Del Carmen Collao Gonzalez', r:'13.315.259-8', c:'Guardia de Línea'},
+  {n:'Nykenson Joseph', r:'25.204.261-K', c:'Guardia de Línea'},
+  {n:'Omar Fernando Lagos Jorquera', r:'9.383.759-2', c:'Guardia Taller'},
+  {n:'Oriana Alejandra Vergara Ceballo', r:'18.193.450-6', c:'Guardia de Línea'},
+  {n:'Oscar Andres Verdejo Agregan', r:'19.859.255-2', c:'Guardia Taller'},
+  {n:'Oscar Daniel Estrada Esparza', r:'17.065.287-8', c:'Guardia de Línea'},
+  {n:'Osvaldo Amedes Jaque Ordenes', r:'10.934.810-4', c:'Guardia Taller'},
+  {n:'Pablo Alexis Alfaro Parraguez', r:'10.553.459-0', c:'Guardia de Línea'},
+  {n:'Pablo Andres  Sepulveda Gutierrez', r:'18.459.115-4', c:'Asistente de Servicio'},
+  {n:'Pablo Andres Avila Apablaza', r:'21.658.463-5', c:'Asistente de Servicio'},
+  {n:'Patricio Alberto Naranjo Muñoz', r:'19.144.513-9', c:'Guardia de Línea'},
+  {n:'Patricio Andres Reyes Troncoso', r:'15.707.895-K', c:'Guardia Taller'},
+  {n:'Patricio Humberto Pizarro Aravena', r:'9.526.635-5', c:'Guardia Edificio'},
+  {n:'Patricio Javier Barrios Troncoso', r:'20.398.162-7', c:'Guardia de Línea'},
+  {n:'Patrick Alejandro Aravena Pinto', r:'20.534.236-2', c:'Guardia Edificio'},
+  {n:'Paula Elena Moraga Gomez', r:'10.780.047-6', c:'Guardia de Línea'},
+  {n:'Priscilla Elizabeth Mendez Lassnibatt', r:'15.707.498-9', c:'Asistente de Servicio'},
+  {n:'Randy Oriette Constanza Guzman Carrasco', r:'16.909.885-9', c:'Asistente de Servicio'},
+  {n:'Raul Antonio Cartes Marmolejo', r:'7.580.282-K', c:'Guardia Taller'},
+  {n:'Ricardo Esteban Jimenez Machuca', r:'21.955.641-1', c:'Guardia de Línea'},
+  {n:'Ricardo Sebastian Vargas Cortes', r:'18.293.958-7', c:'Guardia Edificio'},
+  {n:'Rodrigo Antonio Diaz Salas', r:'13.089.294-9', c:'Guardia de Línea'},
+  {n:'Rodrigo Hernan Cea Uribe', r:'19.719.698-K', c:'Asistente de Servicio'},
+  {n:'Romina Paola Zuñiga Cubillos', r:'20.669.607-9', c:'Asistente de Servicio'},
+  {n:'Rosa Ester Muñoz Castro', r:'16.243.591-4', c:'Asistente de Servicio'},
+  {n:'Rossana Del Carmen Muñoz Alvarez', r:'12.880.881-7', c:'Asistente de Servicio'},
+  {n:'Sandra Del Carmen Muñoz Medina', r:'7.414.917-0', c:'Asistente de Servicio'},
+  {n:'Sara Marleny Salvador Calvo', r:'22.245.526-K', c:'Asistente de Servicio'},
+  {n:'Sergio Alejandro Espinoza Ortega', r:'13.143.526-6', c:'Asistente de Servicio'},
+  {n:'Sergio Alfonso Bravo Vera', r:'6.599.324-4', c:'Guardia Taller'},
+  {n:'Sergio Cesar Salas Olguin', r:'5.787.514-3', c:'Asistente de Servicio'},
+  {n:'Silvia Angiara Sotomayor Ramirez', r:'19.501.920-7', c:'Asistente de Servicio'},
+  {n:'Silvia Catalina Alvarado Vargas', r:'21.970.455-0', c:'Asistente de Servicio'},
+  {n:'Silvia Yicela Carozzi Jofre', r:'9.669.980-8', c:'Guardia de Línea'},
+  {n:'Slande Yves Schama Sinvry', r:'26.099.642-8', c:'Asistente de Servicio'},
+  {n:'Sofia Alejandra Albornoz Rivas', r:'21.410.650-7', c:'Guardia de Línea'},
+  {n:'Solange Isabel Morales Carrillo', r:'17.110.750-4', c:'Asistente de Servicio'},
+  {n:'Solange Lisette Flores Marambio', r:'20.492.826-6', c:'Asistente de Servicio'},
+  {n:'Stiveent Humberto Villalobos Barrera', r:'21.613.560-1', c:'Asistente de Servicio'},
+  {n:'Susana Carolina Segovia De Abatte', r:'14.701.630-1', c:'Guardia de Línea'},
+  {n:'Susana Del Carmen Celis Pino', r:'13.552.416-6', c:'Guardia de Línea'},
+  {n:'Tamara Micaela Gomez Pinchera', r:'22.037.846-2', c:'Asistente de Servicio'},
+  {n:'Tania Ogaz Vega', r:'14.138.408-2', c:'Asistente de Servicio'},
+  {n:'Teresa Guillermina Silva Garrido', r:'7.937.627-2', c:'Guardia de Línea'},
+  {n:'Thiare Javiera Villablanca Peñafiel', r:'21.185.681-5', c:'Asistente de Servicio'},
+  {n:'Tilna Abigail Martinez Mendez', r:'17.577.639-7', c:'Asistente de Servicio'},
+  {n:'Tomas Ignacio Valdivia Sanchez', r:'21.097.018-5', c:'Asistente de Servicio'},
+  {n:'Valeria Francisca Diaz Donoso', r:'21.123.335-4', c:'Asistente de Servicio'},
+  {n:'Valeska Cimarid Alvarez Labrin', r:'18.122.379-0', c:'Asistente de Servicio'},
+  {n:'Vania Yamilet Moreno Melipil', r:'20.333.217-3', c:'Asistente de Servicio'},
+  {n:'Veronica Maribel Cruces Mosqueira', r:'19.549.447-9', c:'Guardia de Línea'},
+  {n:'Vicente Andres Lamoza Kranjc', r:'16.069.123-9', c:'Guardia de Línea'},
+  {n:'Victor Manuel Flores Ebner', r:'13.667.509-5', c:'Asistente de Servicio'},
+  {n:'Victor Manuel Hernandez Tapia', r:'18.189.933-6', c:'Asistente de Servicio'},
+  {n:'Victoria Consuelo Nahuelpan Guerrero', r:'22.173.735-0', c:'Asistente de Servicio'},
+  {n:'Victoria Diana Matamala Matamala', r:'18.090.802-1', c:'Asistente de Servicio'},
+  {n:'Violeta Maria Lemunao Aninao', r:'11.908.244-7', c:'Asistente de Servicio'},
+  {n:'Vladimir Daniel Aranguiz Silva', r:'22.603.177-4', c:'Guardia de Línea'},
+  {n:'William Jacob Rocha Muñoz', r:'13.293.862-8', c:'Guardia de Línea'},
+  {n:'Yanara Maibrith Campos Araya', r:'22.379.459-9', c:'Asistente de Servicio'},
+  {n:'Yasna Elizabeth Flores Riquelme', r:'14.255.397-K', c:'Asistente de Servicio'},
+  {n:'Yenifer Patricia Moraga Peña', r:'19.442.316-0', c:'Guardia de Línea'},
+  {n:'Yesenia Leonor Vargas Gais', r:'18.609.458-1', c:'Asistente de Servicio'},
+  {n:'Yordano Jose Manuel Chaparro Ruiz', r:'20.451.454-2', c:'Guardia Edificio'},
+].sort((a,b)=>a.n.localeCompare(b.n));
+
+const STEP_META=[
+  {n:1,title:'Identificación',icon:'📍'},
+  {n:2,title:'Trabajador',icon:'👤'},
+  {n:3,title:'Uniforme',icon:'👔'},
+  {n:4,title:'Credenciales',icon:'🪪'},
+  {n:5,title:'EPP',icon:'🦺'},
+  {n:6,title:'Equipamiento',icon:'📡'},
+  {n:7,title:'Presentación Personal',icon:'✅'},
+  {n:8,title:'Directiva de Funcionamiento',icon:'📋'},
+  {n:9,title:'Desempeño y Competencias',icon:'🎯'},
+  {n:10,title:'Celular y Observaciones',icon:'📱'},
+  {n:11,title:'Resumen',icon:'🗒️'}
+];
+
+// ── STATE ─────────────────────────────────────────────────────────
+let step=1;const N=11;
+let fd=mkFd();
+function mkFd(){return{
+  modo:null,supervisor:'',inspector:'',inspectorOtro:'',jefeEstacion:'',
+  linea:'',zona:'',estacion:'',lat:null,lon:null,geoDistancia:null,geoAccuracy:null,
+  nombre:'',rut:'',cargo:'',turno:'',
+  unifComplete:null,unifItems:{},
+  credC:null,credOS:null,
+  epp:{},radio:null,manosLibres:null,llaveTimp:null,
+  present:null,presentObs:'',
+  directiva:null,directivaObs:'',
+  comp:[],celular:null,obsGen:''
+};}
+
+// ── UTILS ─────────────────────────────────────────────────────────
+const mc=()=>document.getElementById('mc');
+function sf(k,v){fd[k]=v;}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function scrollTop(){window.scrollTo({top:0,behavior:'smooth'});}
+function isAS(){return fd.cargo==='Asistente de Servicio';}
+function isLinea(c){return c==='Guardia de Línea'||c==='Asistente de Servicio';}
+function pregs(){return isAS()?PREG_A:PREG_G;}
+function inspector(){return fd.inspector==='Otro'?fd.inspectorOtro:fd.inspector;}
+
+function setField(k,v,btn){
+  fd[k]=v;
+  if(btn){
+    btn.parentElement.querySelectorAll('.tgl').forEach(b=>b.classList.remove('yes','no','na','par'));
+    btn.classList.add(v===true||v==='yes'?'yes':v===false||v==='no'?'no':v==='par'?'par':'na');
+  }
+}
+
+function boolBadge(v){
+  if(v===true)return'<span class="ok">✓ Cumple</span>';
+  if(v===false)return'<span class="bad">✗ No Cumple</span>';
+  return'<span class="na">—</span>';
+}
+function valBadge(v){
+  if(v==='yes')return'<span class="ok">✓ Sí</span>';
+  if(v==='no')return'<span class="bad">✗ No</span>';
+  if(v==='par')return'<span class="pa">~ Parcial</span>';
+  return'<span class="na">—</span>';
+}
+
+
+// ── COORDENADAS ESTACIONES ────────────────────────────────────────
+const COORDS = {
+  'Los Dominicos':          {lat:-33.4087,lon:-70.5757},
+  'Hernando de Magallanes': {lat:-33.4133,lon:-70.5848},
+  'Manquehue':              {lat:-33.4178,lon:-70.5927},
+  'Escuela Militar':        {lat:-33.4233,lon:-70.6009},
+  'Alcántara':              {lat:-33.4253,lon:-70.6083},
+  'El Golf':                {lat:-33.4249,lon:-70.6168},
+  'Los Leones':             {lat:-33.4256,lon:-70.6274},
+  'Pedro de Valdivia':      {lat:-33.4261,lon:-70.6347},
+  'Manuel Montt':           {lat:-33.4257,lon:-70.6425},
+  'Salvador':               {lat:-33.4420,lon:-70.6342},
+  'Universidad Católica':   {lat:-33.4408,lon:-70.6411},
+  'Santa Lucía':            {lat:-33.4394,lon:-70.6467},
+  'Universidad de Chile':   {lat:-33.4430,lon:-70.6508},
+  'La Moneda':              {lat:-33.4428,lon:-70.6567},
+  'Los Héroes L1':          {lat:-33.4503,lon:-70.6597},
+  'Los Héroes L2':          {lat:-33.4503,lon:-70.6597},
+  'República':              {lat:-33.4554,lon:-70.6617},
+  'Unión Latinoamericana':  {lat:-33.4593,lon:-70.6646},
+  'Estación Central':       {lat:-33.4625,lon:-70.6756},
+  'Universidad de Santiago':{lat:-33.4650,lon:-70.6819},
+  'San Alberto Hurtado':    {lat:-33.4720,lon:-70.6924},
+  'Ecuador':                {lat:-33.4740,lon:-70.7011},
+  'Las Rejas':              {lat:-33.4741,lon:-70.7124},
+  'Pajaritos':              {lat:-33.4718,lon:-70.7231},
+  'Intermodal Pajaritos':   {lat:-33.4718,lon:-70.7231},
+  'Neptuno':                {lat:-33.4731,lon:-70.7286},
+  'San Pablo L5':           {lat:-33.4764,lon:-70.7395},
+  'San Pablo L1':           {lat:-33.4764,lon:-70.7395},
+  'Taller Neptuno':         {lat:-33.4731,lon:-70.7286}
+};
+
+function haversine(la1,lo1,la2,lo2){
+  const R=6371000,p1=la1*Math.PI/180,p2=la2*Math.PI/180,
+    dp=(la2-la1)*Math.PI/180,dl=(lo2-lo1)*Math.PI/180,
+    a=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+}
+
+function geoClass(){
+  if(!fd.lat)return'';
+  if(fd.geoDistancia===null)return' ok';
+  if(fd.geoDistancia<=300)return' ok';
+  if(fd.geoDistancia<=600)return' warn';
+  return' err';
+}
+function geoLabel(){
+  const acc=fd.geoAccuracy?` (±${fd.geoAccuracy}m)`:'';
+  if(!fd.lat)return'📍 Capturar ubicación actual';
+  if(fd.geoDistancia===null)return`✓ Capturada (${fd.lat.toFixed(4)}, ${fd.lon.toFixed(4)})${acc}`;
+  if(fd.geoDistancia<=300)return`✓ En estación · ${fd.geoDistancia}m${acc}`;
+  if(fd.geoDistancia<=600)return`⚠ Cercano · ${fd.geoDistancia}m de ${fd.estacion}${acc}`;
+  return`✗ Fuera de rango · ${fd.geoDistancia}m de ${fd.estacion}`;
+}
+
+// ── MODO + JEFE ESTACION ─────────────────────────────────────────
+function setModo(val,btn){
+  fd.modo=val;
+  btn.parentElement.querySelectorAll('.tgl').forEach(b=>b.classList.remove('yes','no'));
+  btn.classList.add('yes');
+  const iw=document.getElementById('inspWrap');
+  if(iw)iw.style.display=val==='inspector'?'block':'none';
+  if(val!=='inspector'){fd.inspector='';fd.inspectorOtro='';}
+  checkJefeEst();
+}
+function checkJefeEst(){
+  const w=document.getElementById('jefeWrap');
+  if(w)w.style.display='block';
+}
+
+// ── CASCADING SELECTS ─────────────────────────────────────────────
+function updZonas(linea){
+  const zs=Object.keys(ESTRUCTURA[linea]||{});
+  const sel=document.getElementById('zonaSel');if(!sel)return;
+  sel.innerHTML='<option value="">Seleccionar zona...</option>';
+  zs.forEach(z=>{const o=document.createElement('option');o.value=z;o.textContent=z;if(fd.zona===z)o.selected=true;sel.appendChild(o);});
+  if(zs.length===1){fd.zona=zs[0];sel.value=zs[0];updEst(linea,zs[0]);}
+}
+function updEst(linea,zona){
+  const es=((ESTRUCTURA[linea]||{})[zona])||[];
+  const sel=document.getElementById('estSel');if(!sel)return;
+  sel.innerHTML='<option value="">Seleccionar estación...</option>';
+  es.forEach(e=>{const o=document.createElement('option');o.value=e;o.textContent=e;if(fd.estacion===e)o.selected=true;sel.appendChild(o);});
+  if(es.length===1){fd.estacion=es[0];sel.value=es[0];}
+}
+
+// ── WORKER SEARCH ─────────────────────────────────────────────────
+function filterW(){
+  const inp=document.getElementById('wSearch');
+  const drop=document.getElementById('wDrop');
+  if(!inp||!drop)return;
+  sf('nombre',inp.value);
+  const q=inp.value.toLowerCase().trim();
+  const matches=q.length<1
+    ?TW.slice(0,8)
+    :TW.filter(w=>w.n.toLowerCase().includes(q)||w.r.replace(/[.\-]/g,'').includes(q.replace(/[.\-]/g,''))).slice(0,8);
+  if(!matches.length){drop.style.display='none';return;}
+  drop.innerHTML=matches.map(w=>{const i=TW.indexOf(w);
+    return`<div class="wdi" onmousedown="pickW(${i})"><span class="wdn">${w.n}</span><span class="wdr">${w.r} · ${w.c}</span></div>`;
+  }).join('');
+  drop.style.display='block';
+}
+function pickW(i){
+  const w=TW[i];if(!w)return;
+  fd.nombre=w.n;fd.rut=w.r;fd.cargo=w.c;fd.epp={};fd.comp=[];fd.unifItems={};
+  const inp=document.getElementById('wSearch');
+  const rutI=document.getElementById('rutInp');
+  const csel=document.getElementById('cargoSel');
+  const drop=document.getElementById('wDrop');
+  if(inp)inp.value=w.n;if(rutI)rutI.value=w.r;
+  if(csel)csel.value=w.c;if(drop)drop.style.display='none';
+}
+
+// ── GPS ───────────────────────────────────────────────────────────
+function captureGPS(){
+  if(!navigator.geolocation){toast('Geolocalización no disponible');return;}
+  const btn=document.getElementById('gpsBtn');
+  if(btn){btn.textContent='⏳ Obteniendo...';btn.className='gps-btn';}
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      fd.lat=pos.coords.latitude;fd.lon=pos.coords.longitude;
+      fd.geoAccuracy=Math.round(pos.coords.accuracy);
+      const sc=COORDS[fd.estacion];
+      if(sc){
+        fd.geoDistancia=haversine(fd.lat,fd.lon,sc.lat,sc.lon);
+      } else {
+        fd.geoDistancia=null;
+      }
+      const b=document.getElementById('gpsBtn');
+      if(!b)return;
+      b.className='gps-btn'+geoClass();
+      b.textContent=geoLabel();
+    },
+    ()=>{toast('No se pudo obtener ubicación');
+      const b=document.getElementById('gpsBtn');if(b)b.textContent='📍 Capturar ubicación actual';},
+    {enableHighAccuracy:true,timeout:15000}
+  );
+}
+
+// ── RUT FORMAT ────────────────────────────────────────────────────
+function fmtRut(inp){
+  let v=inp.value.replace(/[^0-9kK]/g,'');
+  if(v.length>1)v=v.slice(0,-1).replace(/\B(?=(\d{3})+(?!\d))/g,'.')+'-'+v.slice(-1).toUpperCase();
+  inp.value=v;fd.rut=v;
+}
+
+// ── EPP HELPERS ───────────────────────────────────────────────────
+function setEpp(item,v,btn,idx){
+  if(!fd.epp[item])fd.epp[item]={val:null,obs:''};
+  fd.epp[item].val=v;
+  btn.parentElement.querySelectorAll('.tgl').forEach(b=>b.classList.remove('yes','no'));
+  btn.classList.add(v==='yes'?'yes':'no');
+  const e=document.getElementById('eppExp_'+idx);
+  if(e)e.classList.toggle('open',v==='no');
+}
+function setEppObs(item,v){if(!fd.epp[item])fd.epp[item]={val:null,obs:''};fd.epp[item].obs=v;}
+
+// ── COMP HELPERS ──────────────────────────────────────────────────
+function setComp(i,v,btn){
+  if(!fd.comp[i])fd.comp[i]={val:null,obs:''};
+  fd.comp[i].val=v;
+  btn.parentElement.querySelectorAll('.tgl').forEach(b=>b.classList.remove('yes','no','par'));
+  btn.classList.add(v==='yes'?'yes':v==='no'?'no':'par');
+  const e=document.getElementById('compExp_'+i);
+  if(e)e.classList.toggle('open',v==='par'||v==='no');
+}
+function setCompObs(i,v){if(!fd.comp[i])fd.comp[i]={val:null,obs:''};fd.comp[i].obs=v;}
+
+// ── UNIFORME ITEMS ────────────────────────────────────────────────
+function setUnif(item,val,btn){
+  fd.unifItems[item]=(fd.unifItems[item]===val)?null:val;
+  const row=btn.closest('.unif-row');
+  const btns=row.querySelectorAll('.utgl');
+  btns.forEach(b=>b.classList.remove('falta','desg'));
+  if(fd.unifItems[item]==='falta')btns[0].classList.add('falta');
+  else if(fd.unifItems[item]==='desg')btns[1].classList.add('desg');
+}
+
+// ── RENDERS ───────────────────────────────────────────────────────
+function secH(n){const m=STEP_META[n-1];return`<div class="sh"><div class="si">${m.icon}</div><div><div class="st">${m.title}</div><div class="ss">Paso ${n} de ${N}</div></div></div>`;}
+
+function r1(){
+  return`<div class="card">
+    <div class="fg">
+      <div class="fl">Tipo de fiscalización</div>
+      <div class="trow">
+        <button class="tgl${fd.modo==='diaria'?' yes':''}" onclick="setModo('diaria',this)">📋 Diaria<br><small style="font-weight:400;opacity:.8">Supervisor</small></button>
+        <button class="tgl${fd.modo==='inspector'?' yes':''}" onclick="setModo('inspector',this)">🔍 Aleatoria<br><small style="font-weight:400;opacity:.8">Inspector</small></button>
+      </div></div>
+    <div class="fg"><div class="fl">Supervisor</div>
+      <select onchange="sf('supervisor',this.value)">
+        <option value="">Seleccionar supervisor...</option>
+        ${SUPERVISORES.map(s=>`<option value="${s}"${fd.supervisor===s?' selected':''}>${s}</option>`).join('')}
+      </select></div>
+    <div class="fg" id="inspWrap" style="display:${fd.modo==='inspector'?'block':'none'}">
+      <div class="fl">Inspector</div>
+      <select onchange="sf('inspector',this.value);document.getElementById('oiW').style.display=this.value==='Otro'?'block':'none'">
+        <option value="">Seleccionar inspector...</option>
+        ${INSPECTORES.map(i=>`<option value="${i}"${fd.inspector===i?' selected':''}>${i}</option>`).join('')}
+      </select></div>
+    <div class="fg" id="oiW" style="display:${fd.inspector==='Otro'?'block':'none'}">
+      <div class="fl">Nombre del inspector</div>
+      <input type="text" placeholder="Nombre completo" value="${fd.inspectorOtro}" oninput="sf('inspectorOtro',this.value)"></div>
+    <div class="fg"><div class="fl">Línea</div>
+      <select id="lnSel" onchange="sf('linea',this.value);sf('zona','');sf('estacion','');updZonas(this.value);checkJefeEst()">
+        <option value="">Seleccionar línea...</option>
+        ${LINEAS.map(l=>`<option value="${l}"${fd.linea===l?' selected':''}>${l}</option>`).join('')}
+      </select></div>
+    <div class="fg"><div class="fl">Zona</div>
+      <select id="zonaSel" onchange="sf('zona',this.value);sf('estacion','');updEst(fd.linea,this.value)">
+        <option value="">${fd.linea?'Seleccionar zona...':'— Selecciona línea primero —'}</option>
+      </select></div>
+    <div class="fg"><div class="fl">Estación / Recinto</div>
+      <select id="estSel" onchange="sf('estacion',this.value)">
+        <option value="">${fd.zona?'Seleccionar estación...':'— Selecciona zona primero —'}</option>
+      </select></div>
+    <div class="fg" id="jefeWrap" style="display:block">
+      <div class="fl">Nombre Jefe de Estación / Recinto</div>
+      <input type="text" placeholder="Nombre del jefe de estación" value="${fd.jefeEstacion}" oninput="sf('jefeEstacion',this.value)"></div>
+    <div class="fg"><div class="fl">Geolocalización</div>
+      <button class="gps-btn${geoClass()}" id="gpsBtn" onclick="captureGPS()">
+        ${geoLabel()}
+      </button>
+      <div class="fh">Confirma presencia física en la estación</div></div>
+  </div>`;}
+
+function r2(){
+  return`<div class="card">
+    <div class="fg"><div class="fl">Trabajador</div>
+      <input type="text" id="wSearch" placeholder="Buscar por nombre o RUT..."
+        value="${fd.nombre}" oninput="filterW()" onfocus="filterW()" autocomplete="off"
+        onblur="setTimeout(()=>{const d=document.getElementById('wDrop');if(d)d.style.display='none'},150)">
+      <div id="wDrop" class="wdrop" style="display:none"></div></div>
+    <div class="fg"><div class="fl">RUT</div>
+      <input type="text" id="rutInp" placeholder="Se completa al seleccionar"
+        value="${fd.rut}" oninput="fmtRut(this)" inputmode="numeric"></div>
+    <div class="fg"><div class="fl">Cargo</div>
+      <select id="cargoSel" onchange="sf('cargo',this.value);fd.epp={};fd.comp=[];fd.unifItems={}">
+        <option value="">Seleccionar cargo...</option>
+        ${CARGOS.map(c=>`<option value="${c}"${fd.cargo===c?' selected':''}>${c}</option>`).join('')}
+      </select></div>
+    <div class="fg"><div class="fl">Turno</div>
+      <select onchange="sf('turno',this.value)">
+        <option value="">Seleccionar turno...</option>
+        ${TURNOS.map(t=>`<option value="${t}"${fd.turno===t?' selected':''}>${t}</option>`).join('')}
+      </select></div>
+  </div>`;}
+
+function r3(){
+  const items=UNIF_MAP[fd.cargo]||[];
+  items.forEach(i=>{if(!(i in fd.unifItems))fd.unifItems[i]=null;});
+  if(!('Geólogo bicolor' in fd.unifItems))fd.unifItems['Geólogo bicolor']=null;
+  const renderItem=item=>`
+    <div class="unif-row">
+      <span class="unif-name">${item}</span>
+      <div class="unif-btns">
+        <button class="utgl${fd.unifItems[item]==='falta'?' falta':''}" onclick="setUnif('${item}','falta',this)">Falta</button>
+        <button class="utgl${fd.unifItems[item]==='desg'?' desg':''}" onclick="setUnif('${item}','desg',this)">Desgastado</button>
+      </div>
+    </div>`;
+  const geoRow=isAS()?renderItem('Geólogo bicolor')
+    :`<div class="unif-row" style="opacity:.4"><span class="unif-name">Geólogo bicolor</span><span class="unif-na">No Aplica</span></div>`;
+  return`<div class="card">
+    <div class="fl">¿Uniforme completo?</div>
+    <div class="trow">
+      <button class="tgl${fd.unifComplete===true?' yes':''}" onclick="setField('unifComplete',true,this);document.getElementById('ufExp').classList.remove('open')">✓ Cumple</button>
+      <button class="tgl${fd.unifComplete===false?' no':''}" onclick="setField('unifComplete',false,this);document.getElementById('ufExp').classList.add('open')">✗ No Cumple</button>
+    </div>
+    <div class="exp${fd.unifComplete===false?' open':''}" id="ufExp">
+      <div style="margin-top:14px">
+        <div class="fl">Estado por prenda</div>
+        ${items.map(renderItem).join('')}
+        ${geoRow}
+      </div>
+    </div>
+  </div>
+  ${!fd.cargo?`<div class="card" style="border-color:var(--acc)"><p style="font-size:13px;color:var(--txt2)">⚠️ Selecciona el cargo del trabajador en el Paso 2.</p></div>`:''}`;}
+
+function r4(){
+  return`<div class="card">
+    <div class="ir"><div class="it">Credencial contratista</div>
+      <div class="tag">Todo el personal</div>
+      <div class="trow">
+        <button class="tgl${fd.credC===true?' yes':''}" onclick="setField('credC',true,this)">✓ Tiene</button>
+        <button class="tgl${fd.credC===false?' no':''}" onclick="setField('credC',false,this)">✗ No tiene</button>
+      </div></div>
+    <div class="ir"><div class="it">Credencial / Certificado OS-10</div>
+      <div class="tag${isAS()?' dim':''}">Solo guardias</div>
+      ${isAS()?`<div class="trow"><button class="tgl na" style="opacity:.5;cursor:default" disabled>No Aplica — Asistente de Servicio</button></div>`
+      :`<div class="trow">
+          <button class="tgl${fd.credOS===true?' yes':''}" onclick="setField('credOS',true,this)">✓ Tiene</button>
+          <button class="tgl${fd.credOS===false?' no':''}" onclick="setField('credOS',false,this)">✗ No tiene</button>
+        </div>`}
+    </div></div>`;}
+
+function r5(){
+  const items=EPP_MAP[fd.cargo]||[];
+  if(!fd.cargo)return`<div class="card"><p style="font-size:13px;color:var(--txt2)">⚠️ Selecciona el cargo en el Paso 2.</p></div>`;
+  return`<div class="tag">Cargo: ${fd.cargo}</div>
+  ${items.map((item,i)=>{const s=fd.epp[item]||{val:null,obs:''};return`
+    <div class="ir"><div class="it">${item}</div>
+      <div class="trow">
+        <button class="tgl${s.val==='yes'?' yes':''}" onclick="setEpp('${item}','yes',this,${i})">✓ Cumple</button>
+        <button class="tgl${s.val==='no'?' no':''}" onclick="setEpp('${item}','no',this,${i})">✗ No Cumple</button>
+      </div>
+      <div class="exp${s.val==='no'?' open':''}" id="eppExp_${i}">
+        <div style="margin-top:10px"><input type="text" placeholder="Observación..." value="${s.obs}" oninput="setEppObs('${item}',this.value)"></div>
+      </div></div>`;}).join('')}`;}
+
+function r6(){
+  const lnea=isLinea(fd.cargo);
+  const row=(k,lbl)=>`<div class="ir"><div class="it">${lbl}</div>
+    <div class="trow">
+      <button class="tgl${fd[k]===true?' yes':''}" onclick="setField('${k}',true,this)">✓ Cumple</button>
+      <button class="tgl${fd[k]===false?' no':''}" onclick="setField('${k}',false,this)">✗ No Cumple</button>
+    </div></div>`;
+  return`<div class="card">
+    ${row('radio','📡 Radio de comunicación')}
+    ${row('manosLibres','🎧 Manos libres (auricular)')}
+    ${lnea?row('llaveTimp','🔑 Llave de tímpano / llave de freno')
+    :`<div class="ir"><div class="it">🔑 Llave de tímpano / llave de freno</div>
+       <div class="trow"><button class="tgl na" style="opacity:.5;cursor:default" disabled>No Aplica — ${fd.cargo||'sin cargo'}</button></div></div>`}
+  </div>`;}
+
+function r7(){
+  return`<div class="card">
+    <div class="fl">Presentación personal</div>
+    <div class="trow">
+      <button class="tgl${fd.present===true?' yes':''}" onclick="setField('present',true,this);document.getElementById('presExp').classList.remove('open')">👍 Buena</button>
+      <button class="tgl${fd.present===false?' no':''}" onclick="setField('present',false,this);document.getElementById('presExp').classList.add('open')">👎 Mala</button>
+    </div>
+    <div class="exp${fd.present===false?' open':''}" id="presExp">
+      <div style="margin-top:12px">
+        <div class="fl">¿Qué observó?</div>
+        <textarea placeholder="Describir observación..." oninput="sf('presentObs',this.value)">${fd.presentObs}</textarea>
+      </div></div></div>`;}
+
+function r8(){
+  return`<div class="card">
+    <div class="fl">Directiva de funcionamiento</div>
+    ${isAS()?`<div class="trow"><button class="tgl na" style="opacity:.5;cursor:default" disabled>No Aplica — Asistente de Servicio</button></div>`
+    :`<div class="trow">
+        <button class="tgl${fd.directiva===true?' yes':''}" onclick="setField('directiva',true,this);document.getElementById('dirExp').classList.remove('open')">✓ Aplica</button>
+        <button class="tgl${fd.directiva===false?' no':''}" onclick="setField('directiva',false,this);document.getElementById('dirExp').classList.add('open')">✗ No Aplica</button>
+      </div>
+      <div class="exp${fd.directiva===false?' open':''}" id="dirExp">
+        <div style="margin-top:12px">
+          <textarea placeholder="Descripción del incumplimiento..." oninput="sf('directivaObs',this.value)">${fd.directivaObs}</textarea>
+        </div></div>`}
+  </div>`;}
+
+function r9(){
+  const ps=pregs();
+  if(fd.comp.length!==ps.length)fd.comp=ps.map((_,i)=>fd.comp[i]||{val:null,obs:''});
+  const posLabel=isAS()?'Posición Efectiva':'Posición Táctica';
+  return`<div class="card">
+    <div class="fl">${posLabel}</div>
+    <div class="trow">
+      <button class="tgl${fd.posicion===true?' yes':''}" onclick="setField('posicion',true,this)">✓ Cumple</button>
+      <button class="tgl${fd.posicion===false?' no':''}" onclick="setField('posicion',false,this)">✗ No Cumple</button>
+    </div>
+    <div style="height:1px;background:var(--bdr);margin:14px 0 10px"></div>
+    <div class="fl" style="margin-bottom:10px">Preguntas de evaluación</div>
+    <div class="card">
+    ${ps.map((p,i)=>{const c=fd.comp[i];return`
+      <div class="ci">
+        <div class="cq">${i+1}. ${p}</div>
+        <div class="trow">
+          <button class="tgl${c.val==='yes'?' yes':''}" onclick="setComp(${i},'yes',this)">✓ Sí</button>
+          <button class="tgl${c.val==='par'?' par':''}" onclick="setComp(${i},'par',this)">~ Parcial</button>
+          <button class="tgl${c.val==='no'?' no':''}" onclick="setComp(${i},'no',this)">✗ No</button>
+        </div>
+        <div class="exp${(c.val==='par'||c.val==='no')?' open':''}" id="compExp_${i}">
+          <div style="margin-top:10px"><input type="text" placeholder="Retroalimentación..." value="${c.obs}" oninput="setCompObs(${i},this.value)"></div>
+        </div></div>`;}).join('')}
+  </div></div>`;}
+
+function r10(){
+  return`<div class="card">
+    <div class="fl">Uso de celular durante el turno</div>
+    <div class="trow">
+      <button class="tgl${fd.celular===true?' yes':''}" onclick="setField('celular',true,this)">✓ No usa (Cumple)</button>
+      <button class="tgl${fd.celular===false?' no':''}" onclick="setField('celular',false,this)">✗ Usa (No cumple)</button>
+    </div></div>
+  <div class="card">
+    <div class="fl">Observaciones generales de la visita</div>
+    <textarea placeholder="Cualquier observación adicional..." rows="4" oninput="sf('obsGen',this.value)">${fd.obsGen}</textarea>
+  </div>`;}
+
+function r11(){
+  const ps=pregs();
+  const eppItems=EPP_MAP[fd.cargo]||[];
+  const insp=inspector();
+  const unifIssues=Object.entries(fd.unifItems).filter(([,v])=>v!==null)
+    .map(([k,v])=>`<span class="${v==='falta'?'bad':'pa'}">${k}: ${v==='falta'?'Falta':'Desgastado'}</span>`).join(' · ');
+  const row=(lbl,val)=>`<div class="sr"><span class="sk">${lbl}</span><span class="sv">${val}</span></div>`;
+  const directivaBadge=isAS()?'<span class="na">No Aplica</span>':
+    fd.directiva===true?'<span class="ok">✓ Aplica</span>':
+    fd.directiva===false?'<span class="bad">✗ No Aplica</span>':'<span class="na">—</span>';
+  return`
+  <div class="card ss-sec"><div class="ss-t">📍 Identificación</div>
+    ${row('Tipo',fd.modo==='diaria'?'📋 Diaria (Supervisor)':'🔍 Aleatoria (Inspector)')}
+    ${row('Supervisor',fd.supervisor||'—')}
+    ${row('Inspector',insp||'—')}
+    ${row('Línea / Zona',`${fd.linea} — ${fd.zona||'—'}`)}
+    ${row('Estación',fd.estacion||'—')}
+    ${fd.jefeEstacion?row('Jefe Estación',fd.jefeEstacion):''}
+    ${row('GPS', fd.lat
+      ? (fd.geoDistancia!==null
+          ? fd.geoDistancia<=300 ? '<span class="ok">✓ En estación · '+fd.geoDistancia+'m</span>'
+          : fd.geoDistancia<=600 ? '<span class="pa">⚠ Cercano · '+fd.geoDistancia+'m</span>'
+          : '<span class="bad">✗ Fuera de rango · '+fd.geoDistancia+'m</span>'
+          : '<span class="ok">✓ Capturada</span>')
+      : '<span class="na">No capturada</span>')}
+  </div>
+  <div class="card ss-sec"><div class="ss-t">👤 Trabajador</div>
+    ${row('Nombre',fd.nombre||'—')}
+    ${row('RUT',fd.rut||'—')}
+    ${row('Cargo',fd.cargo||'—')}
+    ${row('Turno',fd.turno||'—')}
+  </div>
+  <div class="card ss-sec"><div class="ss-t">📊 Evaluación</div>
+    ${row('Uniforme completo',fd.unifComplete===true?'<span class="ok">✓ Cumple</span>':fd.unifComplete===false?'<span class="bad">✗ No Cumple</span>':'<span class="na">—</span>')}
+    ${unifIssues?row('Prendas',`<span style="font-size:12px;text-align:right">${unifIssues}</span>`):''}
+    ${row('Credencial contratista',boolBadge(fd.credC))}
+    ${row('Credencial OS-10',isAS()?'<span class="na">No Aplica</span>':boolBadge(fd.credOS))}
+    ${eppItems.map(item=>{const s=fd.epp[item]||{};return row(item,s.val==='yes'?'<span class="ok">✓ Cumple</span>':s.val==='no'?'<span class="bad">✗ No Cumple</span>':'<span class="na">—</span>');}).join('')}
+    ${row('Radio',boolBadge(fd.radio))}
+    ${row('Manos libres',boolBadge(fd.manosLibres))}
+    ${row('Llave tímpano',isLinea(fd.cargo)?boolBadge(fd.llaveTimp):'<span class="na">No Aplica</span>')}
+    ${row('Presentación',fd.present===true?'<span class="ok">👍 Buena</span>':fd.present===false?'<span class="bad">👎 Mala</span>':'<span class="na">—</span>')}
+    ${row('Directiva 265',directivaBadge)}
+  </div>
+  <div class="card ss-sec"><div class="ss-t">🎯 Desempeño y Competencias</div>
+    ${row(isAS()?'Posición Efectiva':'Posición Táctica', fd.posicion===true?'<span class="ok">✓ Cumple</span>':fd.posicion===false?'<span class="bad">✗ No Cumple</span>':'<span class="na">—</span>')}
+    ${ps.map((p,i)=>{const c=fd.comp[i]||{};return`<div class="sr">
+      <span class="sk" style="font-size:11px;line-height:1.3;max-width:50%">${p.substring(0,60)}${p.length>60?'…':''}</span>
+      <span class="sv">${valBadge(c.val)}</span></div>`;}).join('')}
+  </div>
+  <div class="card ss-sec"><div class="ss-t">📱 Celular y Notas</div>
+    ${row('Uso celular',fd.celular===true?'<span class="ok">✓ Cumple</span>':fd.celular===false?'<span class="bad">✗ No Cumple</span>':'<span class="na">—</span>')}
+    ${fd.obsGen?row('Observaciones',`<span style="font-size:12px">${fd.obsGen}</span>`):''}
+  </div>
+  <button class="btn-sub" onclick="doSubmit()">📤 Enviar Fiscalización</button>
+  <p style="font-size:11px;color:var(--txt2);text-align:center;margin-top:12px;padding:0 16px;line-height:1.5">
+    Registro guardado en el dispositivo${SCRIPT_URL?' y enviado a Google Sheets':''}.
+  </p>`;}
+
+// ── RENDER STEP ───────────────────────────────────────────────────
+const renders=[null,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11];
+function render(n){
+  mc().innerHTML=secH(n)+renders[n]();
+  document.getElementById('hNum').textContent=n;
+  document.getElementById('hName').textContent=STEP_META[n-1].title;
+  document.getElementById('pbar').style.width=(n/N*100)+'%';
+  document.getElementById('bp').style.display=n===1?'none':'';
+  document.getElementById('bn').textContent=n===N?'Enviar →':'Continuar →';
+  document.getElementById('nf').style.display='flex';
+  if(n===1&&fd.linea){updZonas(fd.linea);if(fd.zona)updEst(fd.linea,fd.zona);}if(n===1)checkJefeEst();
+  scrollTop();
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────
+function validate(n){
+  switch(n){
+    case 1:
+      if(!fd.modo){toast('Selecciona el tipo de fiscalización');return false;}
+      if(!fd.supervisor){toast('Selecciona un supervisor');return false;}
+      if(fd.modo==='inspector'&&!inspector()){toast('Selecciona un inspector');return false;}
+      if(!fd.linea){toast('Selecciona la línea');return false;}
+      if(!fd.zona){toast('Selecciona la zona');return false;}
+      if(!fd.estacion){toast('Selecciona la estación');return false;}
+      break;
+    case 2:
+      if(!fd.nombre.trim()){toast('Ingresa el nombre del trabajador');return false;}
+      if(!fd.rut.trim()){toast('Ingresa el RUT');return false;}
+      if(!fd.cargo){toast('Selecciona el cargo');return false;}
+      break;
+    case 3:
+      if(fd.unifComplete===null){toast('Indica si el uniforme está completo');return false;}
+      break;
+  }
+  return true;
+}
+function next(){if(step===N){doSubmit();return;}if(!validate(step))return;step++;render(step);}
+function prev(){if(step<=1)return;step--;render(step);}
+
+// ── SUBMIT ────────────────────────────────────────────────────────
+async function doSubmit(){
+  const btn=mc().querySelector('.btn-sub');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Enviando...';}
+  const ps=pregs();const insp=inspector();
+  const eppItems=EPP_MAP[fd.cargo]||[];
+  const unifIssuesTxt=Object.entries(fd.unifItems).filter(([,v])=>v!==null)
+    .map(([k,v])=>`${k}: ${v==='falta'?'Falta':'Desgastado'}`).join('; ');
+  const record={
+    timestamp:new Date().toISOString(),
+    tipo:fd.modo==='diaria'?'Fiscalización Diaria':'Fiscalización Inspector',
+    fecha:new Date().toLocaleDateString('es-CL'),
+    hora:new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'}),
+    supervisor:fd.supervisor,inspector:insp,
+    linea:fd.linea,zona:fd.zona,estacion:fd.estacion,
+    lat:fd.lat||'',lon:fd.lon||'',geoDistancia:fd.geoDistancia!==null?fd.geoDistancia+'m':'',geoAccuracy:fd.geoAccuracy?'±'+fd.geoAccuracy+'m':'',
+    jefeEstacion:fd.jefeEstacion,
+    nombre:fd.nombre,rut:fd.rut,cargo:fd.cargo,turno:fd.turno,
+    uniforme:fd.unifComplete?'Cumple':'No Cumple',
+    unifPrendas:unifIssuesTxt,
+    credContratista:fd.credC?'Tiene':'No tiene',
+    credOS10:isAS()?'No Aplica':(fd.credOS?'Tiene':'No tiene'),
+    epp:eppItems.map(i=>{const s=fd.epp[i]||{};return`${i}: ${s.val==='yes'?'Cumple':'No Cumple'}${s.obs?' ('+s.obs+')':''}`}).join(' | '),
+    radio:fd.radio?'Cumple':'No Cumple',
+    manosLibres:fd.manosLibres?'Cumple':'No Cumple',
+    llaveTimp:isLinea(fd.cargo)?(fd.llaveTimp?'Cumple':'No Cumple'):'No Aplica',
+    posicion:fd.posicion===true?'Cumple':fd.posicion===false?'No Cumple':'—',
+    presentacion:fd.present===true?'Buena':fd.present===false?'Mala':'—',presentObs:fd.presentObs,
+    directiva:isAS()?'No Aplica':(fd.directiva===true?'Cumple':fd.directiva===false?'No Cumple':'—'),
+    directivaObs:fd.directivaObs,
+    comp1:ps[0]?(fd.comp[0]?.val==='yes'?'Sí':fd.comp[0]?.val==='par'?'Parcial':'No')+'|'+(fd.comp[0]?.obs||''):'',
+    comp2:ps[1]?(fd.comp[1]?.val==='yes'?'Sí':fd.comp[1]?.val==='par'?'Parcial':'No')+'|'+(fd.comp[1]?.obs||''):'',
+    comp3:ps[2]?(fd.comp[2]?.val==='yes'?'Sí':fd.comp[2]?.val==='par'?'Parcial':'No')+'|'+(fd.comp[2]?.obs||''):'',
+    comp4:ps[3]?(fd.comp[3]?.val==='yes'?'Sí':fd.comp[3]?.val==='par'?'Parcial':'No')+'|'+(fd.comp[3]?.obs||''):'',
+    celular:fd.celular?'Cumple':'No Cumple',obsGen:fd.obsGen
+  };
+  try{const s=JSON.parse(localStorage.getItem('fisc_ms')||'[]');s.push(record);localStorage.setItem('fisc_ms',JSON.stringify(s));}catch(e){}
+  if(SCRIPT_URL){try{await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({row:Object.values(record)})});}catch(e){}}
+  showSuccess();
+}
+
+function showSuccess(){
+  mc().innerHTML=`<div class="succ show">
+    <div style="font-size:64px;margin-bottom:20px">✅</div>
+    <div style="font-size:22px;font-weight:700;margin-bottom:8px">Fiscalización registrada</div>
+    <div style="font-size:14px;color:var(--txt2);line-height:1.5;margin-bottom:24px">Guardado exitosamente en el dispositivo.</div>
+    <button class="btn-sub" style="max-width:260px" onclick="newForm()">+ Nueva fiscalización</button>
+    <button class="btn-sec" onclick="showSaved()">📂 Ver registros</button>
+  </div>`;
+  document.getElementById('nf').style.display='none';
+}
+function newForm(){fd=mkFd();step=1;render(1);}
+
+function showSaved(){
+  const saved=JSON.parse(localStorage.getItem('fisc_ms')||'[]');
+  mc().innerHTML=`<div class="sh"><div class="si">📂</div><div><div class="st">Registros guardados</div><div class="ss">${saved.length} fiscalizaciones en este dispositivo</div></div></div>
+  ${saved.length===0?`<div class="card"><p style="font-size:13px;color:var(--txt2)">No hay registros aún.</p></div>`:
+    saved.slice().reverse().map(r=>`<div class="card" style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--txt2);margin-bottom:4px">${r.fecha} ${r.hora} · ${r.turno}</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px">${r.nombre}</div>
+      <div style="font-size:12px;color:var(--txt2)">${r.cargo} — ${r.estacion}, ${r.linea}</div>
+      <div style="font-size:12px;color:var(--txt2)">Supervisor: ${r.supervisor} · Inspector: ${r.inspector}</div>
+    </div>`).join('')}
+  ${saved.length?`<button class="btn-sub" onclick="exportCSV()" style="margin-top:4px">⬇ Descargar CSV</button>`:''}
+  <button class="btn-sec" onclick="newForm()">← Volver</button>`;
+  document.getElementById('nf').style.display='none';
+}
+
+function exportCSV(){
+  const saved=JSON.parse(localStorage.getItem('fisc_ms')||'[]');if(!saved.length)return;
+  const hdr=Object.keys(saved[0]);
+  const rows=saved.map(r=>hdr.map(h=>`"${String(r[h]||'').replace(/"/g,'""')}"`).join(','));
+  const csv=[hdr.join(','),...rows].join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`fiscalizaciones_ms_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+render(1);
+</script>
+</body>
+</html>
