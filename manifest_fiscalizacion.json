@@ -1,0 +1,25 @@
+{
+  "name": "Fiscalización MetroSeguridad",
+  "short_name": "Fiscalización MS",
+  "description": "Fiscalización de Personal - MetroSeguridad Serveo",
+  "start_url": "/metroseguridad/fiscalizacion_ms.html",
+  "scope": "/metroseguridad/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F1124",
+  "theme_color": "#0F1124",
+  "icons": [
+    {
+      "src": "icon-192-fisc.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512-fisc.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
