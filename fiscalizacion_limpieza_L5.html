@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#00985F">
+<title>Fiscalización Limpieza Línea 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --naranjo:#EE7623; --naranjo2:#D9641A; --verde:#00985F; --verde2:#007A4C;
+  --ink:#1E2A2E; --ink2:#5B6B70; --card:#FFFFFF; --line:#E3D6CC;
+  --ok:#1F8A4C; --bad:#C0392B; --warn:#E0A100;
+  box-sizing:border-box; padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;min-height:100%}
+body{background:var(--naranjo);color:#fff;font:17px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--verde);color:#fff;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 10px;box-shadow:0 2px 0 var(--verde2)}
+.top{display:flex;align-items:center;gap:12px;max-width:680px;margin:0 auto}
+.l5{flex:none;width:46px;height:46px;border-radius:50%;background:#fff;color:var(--verde);display:grid;place-items:center;font-weight:700;font-size:19px;border:3px solid #fff;box-shadow:inset 0 0 0 3px var(--verde)}
+.top h1{font-size:19px;line-height:1.2;margin:0}
+.top small{display:block;font-size:14px;opacity:.85;font-weight:400}
+.prog{display:flex;gap:4px;margin:10px auto 0;max-width:680px}
+.prog i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.3)}
+.prog i.done{background:#fff} .prog i.now{background:var(--naranjo)}
+main{max-width:680px;margin:0 auto;padding:18px 14px 120px}
+h2{font-size:24px;margin:2px 0 4px;color:#fff} .sub{margin:0 0 16px;color:#FFE9D9}
+.card{background:var(--card);color:var(--ink);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:18px}
+label{display:block;font-weight:700;margin:12px 0 6px;color:var(--ink)}
+label:first-child{margin-top:0}
+input[type=text],input[type=search],select,textarea{width:100%;font:inherit;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:10px;padding:11px 12px}
+textarea{min-height:76px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid var(--verde);outline-offset:2px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1}
+button{font:inherit;font-weight:700;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink);padding:11px 12px;cursor:pointer}
+button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.item{border-top:1px solid var(--line);padding:12px 0}
+.item:first-of-type{border-top:0;padding-top:4px}
+.item p{margin:0 0 8px;font-weight:700}
+.item .seg button.sel.c{background:var(--ok);border-color:var(--ok);color:#fff}
+.item .seg button.sel.n{background:var(--bad);border-color:var(--bad);color:#fff}
+.item textarea{margin-top:8px;min-height:60px}
+.item.miss p{color:var(--bad)}
+.ficha{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:15px;background:#F6F1EC;border-radius:10px;padding:10px 12px;margin-top:10px}
+.ficha b{color:var(--ink2);font-weight:400}
+.lista{max-height:240px;overflow:auto;border:2px solid var(--line);border-radius:10px;margin-top:8px}
+.lista button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);border-radius:0;font-weight:400;padding:10px 12px}
+.lista button small{color:var(--ink2)}
+.lista button.sel{background:var(--verde);color:#fff}.lista button.sel small{color:#E6FFF4}
+.gps{border-radius:10px;padding:12px;margin-top:10px;border:2px solid var(--line)}
+.gps strong{font-size:22px;display:block}
+.gps.g{border-color:var(--ok)}.gps.g strong{color:var(--ok)}
+.gps.y{border-color:var(--warn)}.gps.y strong{color:#9A6F00}
+.gps.r{border-color:var(--bad)}.gps.r strong{color:var(--bad)}
+.btn-verde{width:100%;background:var(--verde);border-color:var(--verde);color:#fff}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.thumbs div{position:relative}.thumbs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px}
+.thumbs button{position:absolute;top:4px;right:4px;padding:1px 8px;font-size:13px}
+canvas#firma{width:100%;height:170px;background:#fff;border:2px dashed var(--line);border-radius:10px;touch-action:none;display:block}
+.score{font-size:60px;font-weight:700;line-height:1;margin:4px 0;color:#fff}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td{padding:7px 2px;border-bottom:1px solid var(--line)} td:last-child{text-align:right;font-weight:700}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--naranjo2);padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px))}
+nav div{display:flex;gap:10px;max-width:680px;margin:0 auto}
+nav button{flex:1;padding:14px}
+nav .go{background:var(--verde);border-color:var(--verde);color:#fff}
+.note{color:var(--ink2);font-size:14px;margin:6px 0 0}
+.pend{background:#fff;color:var(--ink);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:15px;display:none}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:15px;max-width:90%;display:none;z-index:9}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><div class="l5" aria-hidden="true">L5</div>
+    <h1>Fiscalización Limpieza Línea 5<small id="paso"></small></h1></div>
+  <div class="prog" id="prog"></div>
+</header>
+<main><div class="pend" id="pend"></div><div id="view"></div></main>
+<nav><div><button id="back">Atrás</button><button id="next" class="go">Siguiente</button></div></nav>
+<div class="toast" id="toast" role="status"></div>
+<iframe name="envio" id="envio" style="display:none"></iframe>
+
+<script>
+/* ===================== CONFIGURACIÓN ===================== */
+const SCRIPT_URL = "";   // URL /exec de la App web de Apps Script
+
+const SUPERVISORES = ["Darling Oliva Beltrán","Evelyn Torres Ortiz","Gabriela Escudero Lazcano","Gloria Beltrán Carter",
+  "Leandro Yensen Garrido","Marcia Rojas","Miriam Jara Gálvez","Nerilyng Gómez Espinoza","Paola Fuentes Osorio","Tomasa Espinoza Sanhueza"];
+
+const TURNOS = ["Mañana","Tarde"];
+
+const ZONAS = {
+  "Zona 1":["Plaza Maipú","Santiago Bueras","Del Sol","Monte Tabor","Las Parcelas","Laguna Sur","Barrancas"],
+  "Zona 2":["Pudahuel","Lo Prado","Blanqueado","Gruta de Lourdes","Quinta Normal","Cumming","Santa Ana L2","Santa Ana L5","Intermodal del Sol"],
+  "Zona 3":["Plaza de Armas","Bellas Artes","Baquedano L1","Baquedano L5","Parque Bustamante","Santa Isabel","Irarrázaval"],
+  "Zona 4":["Rodrigo de Araya","Carlos Valdovinos","Camino Agrícola","San Joaquín","Pedrero","Mirador","Bellavista La Florida","Intermodal La Florida"]
+};
+
+// Coordenadas por estación: completar como "Plaza Maipú":[-33.51, -70.75]
+const COORDS = {};
+
+const GPS_OK = 300, GPS_WARN = 600;
+
+const SECCIONES = [
+  {id:"aux",  titulo:"Revisión auxiliar de aseo", items:["Uniforme","EPP","Materiales de aseo","Charla de aseo","Revisión de credencial","Libro de asistencia (firma)"]},
+  {id:"acc",  titulo:"Revisión acceso",     items:["Contorno estación","Zócalo","Pasamanos"]},
+  {id:"esc",  titulo:"Revisión escaleras",  items:["Zócalos","Pasamanos"]},
+  {id:"mes",  titulo:"Revisión mesanina",   items:["Torniquetes y metales (despolvado)","Pisos y papeleros (sin basura ni manchas)","Puertas unilaterales"]},
+  {id:"and",  titulo:"Revisión andenes",    items:["Pisos y papeleros (sin basura ni manchas)","Zócalos","Nichos de emergencia","Letreros","Gabinetes de emergencia"]},
+  {id:"dep",  titulo:"Revisión dependencias", items:["Sala de colación","Baños","Oficina jefe de estación","Vestidores","Sala de basura","Odorizadores"]}
+];
+const MAX_FOTOS = 4;
+
+// Nómina de auxiliares (Base de contratación septiembre 2026)
+const TRABAJADORES = [{"n":"Abarzua Galaz Katherine Leonila","r":"18759989-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2140679547","s":440833},{"n":"Acevedo Olaran Gaston Humberto","r":"10547196-3","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140547947","s":460600},{"n":"Adasme Navarrete Fanny Patricia","r":"9219039-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"2137285099","s":458952},{"n":"Agreda Vera Dora","r":"21158398-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2488924171","s":455668},{"n":"Aguirre Peña Ana Evelyn","r":"14138845-2","t":"Mañana","c":"Auxiliar de Aseo","ch":"2488052731","s":449617},{"n":"Alarcon Nuñez Isadora Teresa Montserrat","r":"19831163-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"2137925019","s":458291},{"n":"Alarcon Silva Maria Eugenia","r":"11875900-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182441755","s":458761},{"n":"Alvarez Duran Carlos Antonio","r":"12879599-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2136743227","s":460592},{"n":"Alvarez Llanca Alejandro Omar","r":"13496443-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2139598155","s":458471},{"n":"Andrade Lara Rosa De Las Mercedes","r":"11479576-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2180938891","s":459102},{"n":"Antiao Huaiquipan Victoria Gina","r":"11319200-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2137084619","s":440800},{"n":"Aparicio De Bazalar Nelly Elizabeth","r":"14660755-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"2435225051","s":448919},{"n":"Aquise Mamani Aurora","r":"26133766-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"1153267371","s":463082},{"n":"Araneda Carmona Andela Hylinita","r":"12456960-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140483547","s":462561},{"n":"Arellano Triviño Francesca Estefania","r":"18628558-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"2488613995","s":456433},{"n":"Barboza Piutrin Maria Carmen","r":"12739683-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2470454507","s":442256},{"n":"Barragan Pineda Fabiola","r":"24975167-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2470621035","s":440892},{"n":"Barrera Acevedo Cristian Mauricio","r":"12798630-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2489307867","s":454462},{"n":"Barreto Diaz Angelica Gregoria","r":"24156598-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2139284139","s":440785},{"n":"Barriga Beltran Dedic Del Carmen","r":"11539647-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"1146609211","s":463096},{"n":"Basaure Riquelme Carlos Hernan","r":"12959032-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"2471360859","s":448579},{"n":"Beaubrun Sainte Amonia","r":"25620763-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2488550331","s":442135},{"n":"Becerra Romero Maria Zulema","r":"11754898-8","t":"Mañana","c":"Auxiliar de Aseo","ch":"2137361931","s":440979},{"n":"Bernachea Morales Juan Antonio","r":"13270944-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"2182182491","s":454472},{"n":"Bravo Torres Luis Alberto","r":"9552292-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"","s":463945},{"n":"Cabello Arroyo Doris Magaly","r":"14745238-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"2139903435","s":462060},{"n":"Caceres Gutierrez Melissa Solange","r":"15329489-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181305819","s":463686},{"n":"Canales Muñoz Maria De Las Mercedes","r":"8868927-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2136514475","s":448532},{"n":"Cancino Descovic Alex Servando","r":"14269610-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"2181364315","s":440804},{"n":"Candia Adasme Isabel Margarita","r":"21606442-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"2136522891","s":458926},{"n":"Caro Arancibia Rosa Margarita Del Carmen","r":"9226094-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"2138168347","s":440917},{"n":"Carrasco Jaque Cecilia Alejandra","r":"18084285-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"","s":463939},{"n":"Carreño Andrade Manuel Reinaldo Alejandro","r":"19219205-6","t":"Mañana","c":"Auxiliar de Aseo","ch":"651281387","s":462880},{"n":"Castillo Castillo Leidy Viviana","r":"25755824-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2138432363","s":459096},{"n":"Castillo Muñoz Fabiola Margarita","r":"8483106-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182286523","s":448473},{"n":"Castro Galvez Marcos Alonso","r":"16076072-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"2471297371","s":463656},{"n":"Cañete Cabezas Erica Mercedes","r":"8927038-3","t":"Tarde","c":"Auxiliar de Aseo","ch":"2137699483","s":441057},{"n":"Cea Mella Carlos Joel","r":"8806540-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"2137978411","s":454474},{"n":"Cea Moreira Maria Eliana","r":"9575289-6","t":"Mañana","c":"Auxiliar de Aseo","ch":"1137146267","s":457572},{"n":"Cerda Lizama Victoria Charlotte","r":"21432819-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470785259","s":458227},{"n":"Cherisene Mesidor Solange","r":"26060106-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182237819","s":442205},{"n":"Chumbes La Rosa Susana","r":"24418863-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"","s":463953},{"n":"Cisternas Toledo Soledad Maria","r":"15775592-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"2471454827","s":448566},{"n":"Colin Mecine","r":"25553954-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2470209099","s":442072},{"n":"Collinao Collinahuel German Benedicto","r":"10004888-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2180652939","s":459950},{"n":"Contreras Nuñez Tabi Tiare","r":"20498935-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470292235","s":461283},{"n":"Contreras Ortiz Margarita Del Carmen","r":"12169832-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2180863387","s":459098},{"n":"Cordova Barahona Graciela Del Carmen","r":"9676755-2","t":"Tarde","c":"Auxiliar de Aseo","ch":"2180709131","s":440801},{"n":"Cornejo Mendez Yesenia Stephania","r":"18222010-8","t":"Tarde","c":"Auxiliar de Aseo","ch":"2137747963","s":459200},{"n":"Coñopan Gonzalez Rosa Jacqueline","r":"11474829-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2470825291","s":462054},{"n":"Curin Llanquinao Jorge Emilio","r":"11498717-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2489445979","s":440798},{"n":"Echeverria Rojas Jean Esteban","r":"17390183-6","t":"Tarde","c":"Auxiliar de Aseo","ch":"2182564507","s":458328},{"n":"Elgueta Igor Camilo Andres","r":"17254303-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"2435821899","s":463861},{"n":"Escobar Guzman Jessica Del Carmen","r":"12247464-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2471241643","s":440812},{"n":"Escobar Zuñiga Rodrigo Andres","r":"19002083-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2137225787","s":463692},{"n":"Figueroa Contreras Rogelio Ignacio","r":"11186116-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140715547","s":454468},{"n":"Flores Espinoza Gilda Benice","r":"7642996-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"2181957355","s":454208},{"n":"Flores Muñoz Carlos Roberto","r":"9389375-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"1139914123","s":463056},{"n":"Flores Urzua Paulina Antonieta","r":"13250619-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"","s":463951},{"n":"Fonseca Meriño Jessica Fabiola","r":"17187837-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"","s":463941},{"n":"Frezzani Quevedo Solange Barbarita","r":"13556471-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"2181380955","s":458477},{"n":"Fuentealba Aranguiz Erika Marianne","r":"8665329-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182250283","s":456476},{"n":"Fuentes Aguilera Julio Cesar","r":"9889599-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182267707","s":458346},{"n":"Fuentes Orrego Ingrid Jacqueline","r":"11667866-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2180580075","s":442542},{"n":"Galvez Mora Boris Antonio","r":"13459295-8","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181928699","s":463556},{"n":"Garrido Lopez Mireya Antonieta","r":"11669201-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2488332059","s":440789},{"n":"Gatica Castro Lidia Carmen","r":"11643666-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2488527371","s":451683},{"n":"Gatica Sepulveda Jennifer Javiera","r":"20016738-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"","s":463935},{"n":"Gomez Espinoza Veronica Susana","r":"10833136-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182443435","s":454186},{"n":"Gonzalez Anabalon Jacqueline Del Carmen","r":"8457537-2","t":"Mañana","c":"Auxiliar de Aseo","ch":"2471789115","s":449255},{"n":"Gonzalez Baeza Purisima De Las Mercedes","r":"14285566-6","t":"Mañana","c":"Auxiliar de Aseo","ch":"2471487211","s":448547},{"n":"Gonzalez Caro Ximena Beatriz","r":"11315315-6","t":"Tarde","c":"Auxiliar de Aseo","ch":"2136792427","s":446207},{"n":"Gonzalez Gonzalez Armando Robinson","r":"7976420-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2138738283","s":456428},{"n":"Gonzalez Orellana Mireya Del Carmen","r":"11072452-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182126059","s":462052},{"n":"Guajardo Urbina Juan Segundo","r":"9879595-2","t":"Mañana","c":"Auxiliar de Aseo","ch":"2140848363","s":441456},{"n":"Gutierrez Campos Gloria De Las Rosas","r":"8430792-0","t":"Mañana","c":"Auxiliar de Aseo","ch":"2470386331","s":458075},{"n":"Guzman Vera Millaray Alejandra","r":"20960457-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470972619","s":447750},{"n":"Herrera Castillo Elizabeth Margarita","r":"22915427-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181485627","s":448568},{"n":"Huincahual Aleñir Emelina Rosa","r":"15238610-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"2137212379","s":443975},{"n":"Jaque Keller Lola Ivonne","r":"9970206-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"2471003323","s":440757},{"n":"Jara Manque Gloria Magaly","r":"13584273-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2139858187","s":449592},{"n":"Jean Baptiste Odette","r":"26965578-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2140867835","s":443719},{"n":"Jean Baptiste Point Du Jour Christella","r":"25190088-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"2180542779","s":448555},{"n":"Jean Baptiste Yvenite","r":"26902318-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"1064027590","s":442222},{"n":"Jean Pierre Marie Gabrielle","r":"25212659-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470593803","s":440851},{"n":"Julca Mendoza Jose Luis","r":"25331634-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470089595","s":452060},{"n":"Julien Carline","r":"26904252-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"2140710939","s":442234},{"n":"Kusterman Donoso Adolfo Guillermo","r":"9904871-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"2180879115","s":461025},{"n":"Leipan Curriman Ana Maria","r":"8772850-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2470056203","s":446587},{"n":"Leiva Torres Jessica Isabel","r":"11874705-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2488858571","s":440866},{"n":"Leyton Torres Belen Jesus","r":"20594632-2","t":"Tarde","c":"Auxiliar de Aseo","ch":"2139335995","s":454470},{"n":"Lillo Aguirre Oscar Alejandro","r":"19858320-0","t":"Mañana","c":"Auxiliar de Aseo","ch":"1163969835","s":463093},{"n":"Lirameau Diane","r":"26149085-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182209963","s":442192},{"n":"Lopez Muñoz Wilma Patricia","r":"8940948-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"2434925163","s":460624},{"n":"Louisjean Raymonde","r":"25699086-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"2136700811","s":448956},{"n":"Lucaveche Sotelo Ana Rosa","r":"10672353-2","t":"Mañana","c":"Auxiliar de Aseo","ch":"2140522251","s":448469},{"n":"Lucero Contreras Ana Rosa","r":"10999086-8","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140181227","s":446865},{"n":"Mamani Pfocco Aurelia","r":"23605627-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"2137018427","s":440805},{"n":"Manquilef Millapan David Isaias","r":"15971417-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"650579291","s":448604},{"n":"Marconi Juarez Francisco","r":"10673051-2","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140458587","s":458603},{"n":"Marin De Alvarez Luz Santos","r":"22108807-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"2139579851","s":440809},{"n":"Marin Huaman Domitila","r":"22205090-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2470587947","s":440926},{"n":"Mateluna Arellano Susana Eva","r":"10782233-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"2471551595","s":462557},{"n":"Mazuela Arce Claudio Enrique","r":"12169504-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"2181921355","s":458938},{"n":"Medel Navarrete Patricio","r":"14417056-3","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140299819","s":458322},{"n":"Mellado Rojas Manuel Scott","r":"21586386-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2489067691","s":456427},{"n":"Mendoza Mora Erika Ruth","r":"9671013-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"2138217179","s":442232},{"n":"Meza Barrientos Marco Aurelio","r":"9921556-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"","s":463937},{"n":"Meza Garfia Sergio Javier","r":"13295336-8","t":"Mañana","c":"Auxiliar de Aseo","ch":"2471811723","s":463688},{"n":"Millahual Millahual Fidelina Del Carmen","r":"7620584-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2470917323","s":440819},{"n":"Millan Coñopan Rosa Isabel","r":"17366454-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"2182056107","s":442057},{"n":"Miranda Gonzalez Juana Del Carmen","r":"11003843-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"2181548043","s":448456},{"n":"Molina Cayupi Martina Ignacia","r":"22290469-2","t":"Mañana","c":"Auxiliar de Aseo","ch":"2180776827","s":463560},{"n":"Monardes Herrera Mauricio Erik","r":"11318751-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140117083","s":454931},{"n":"Montecinos Aguilera Cristina Esperanza","r":"9502919-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140101819","s":448925},{"n":"Mora Cid Sabina Teresa","r":"10129755-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2139233803","s":458948},{"n":"Moran Espinoza Christian Eduardo","r":"22329153-8","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470744427","s":448464},{"n":"Munita Riquelme Rosa Ester","r":"11975307-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"2471888379","s":448961},{"n":"Muñoz Arenas Soledad Del Carmen","r":"9589581-6","t":"Tarde","c":"Auxiliar de Aseo","ch":"2136851035","s":442096},{"n":"Muñoz Castro Maria Jovita","r":"6146937-0","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181701771","s":455297},{"n":"Muñoz Garay Nora Andrea","r":"13835990-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"2471679643","s":448529},{"n":"Muñoz Gonzalez Javiera Del Carmen","r":"13957718-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2140453867","s":458231},{"n":"Muñoz Gonzalez Maria Cristina","r":"6983165-6","t":"Mañana","c":"Auxiliar de Aseo","ch":"2489502923","s":449695},{"n":"Muñoz Salgado Loreto Andrea Nicole","r":"17010792-6","t":"Mañana","c":"Auxiliar de Aseo","ch":"2137114171","s":448937},{"n":"Nauto Jeldres Nadia Raquel","r":"10884353-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"1153743035","s":462597},{"n":"Neguiman Neguiman Claudia Cecilia","r":"15269765-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"1154083611","s":462884},{"n":"Nuñez Carvajal Juan Luis","r":"9028924-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2488229387","s":449468},{"n":"Olaya Ocoro Bolivia","r":"24897945-3","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140255067","s":440923},{"n":"Osio Cerezo Sandra Fabiola","r":"27242502-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2139320283","s":450340},{"n":"Ovalle Quintrel Eduardo","r":"7474684-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181085067","s":457518},{"n":"Oyarzun Leyton Caroline Andrea","r":"15484691-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2471233515","s":463558},{"n":"Paisible Bethie","r":"26921108-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2471908011","s":442228},{"n":"Paredes Lopez Felipe Rene","r":"10016452-3","t":"Tarde","c":"Auxiliar de Aseo","ch":"2435172667","s":449628},{"n":"Paredes Saldaña Maria Angelica","r":"11972670-0","t":"Tarde","c":"Auxiliar de Aseo","ch":"2180762603","s":442162},{"n":"Parra Arancibia Hilda Del Carmen","r":"9588740-6","t":"Tarde","c":"Auxiliar de Aseo","ch":"2137817083","s":462400},{"n":"Peña Acevedo Amada Del Transito","r":"8561499-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470322747","s":448510},{"n":"Peña Sandoval Antonio Orlando","r":"12676356-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182216075","s":463260},{"n":"Pierre Louis Yvia","r":"26873153-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"2487645771","s":442216},{"n":"Placide Marie Philippe","r":"25972309-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2182443419","s":447933},{"n":"Pulgar De La Fuente Felipe Ignacio","r":"19918562-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"2137767339","s":458223},{"n":"Queupucura Queupucura Julia Del Carmen","r":"12208292-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182145435","s":442002},{"n":"Quezada Araya Constanza Andrea","r":"19315342-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"2139402619","s":441230},{"n":"Quispe Arriagada Karina Loreto","r":"15006113-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470980075","s":463098},{"n":"Ramos Contreras Patricia Isabel","r":"14552681-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"","s":463949},{"n":"Ramos Pantigozo Rudy Fredy","r":"24607755-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"","s":459222},{"n":"Renteria Olmedo Olga Lily","r":"25352913-K","t":"Mañana","c":"Auxiliar de Aseo","ch":"2137399019","s":448525},{"n":"Retamales Rojas Luisa Teresa Del Rocio","r":"8431004-2","t":"Tarde","c":"Auxiliar de Aseo","ch":"","s":463947},{"n":"Reyes Riquelme Veronica Cecilia","r":"9005660-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182115979","s":440778},{"n":"Rios Beatriz Liliana","r":"14622274-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"2139815083","s":441506},{"n":"Rivera Quila Marcia Alejandra","r":"13481646-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"2138146699","s":457576},{"n":"Rodriguez Aranguiz Camila Andrea","r":"18628895-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"1153729147","s":462599},{"n":"Rodriguez Torres Clemencia","r":"25852683-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"2138587291","s":440777},{"n":"Roman Traillanca Belen Juana","r":"20455635-0","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182452619","s":459112},{"n":"Romero Figueroa Suyhenn Allison","r":"20448462-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"2138724235","s":463252},{"n":"Romero Sepulveda Sara Ester","r":"9962800-6","t":"Tarde","c":"Auxiliar de Aseo","ch":"2139108715","s":448591},{"n":"Rosas Jara Yeferson Nicolas","r":"19781850-6","t":"Tarde","c":"Auxiliar de Aseo","ch":"2181013547","s":461330},{"n":"Rubio Mayta Celina","r":"25320039-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181137179","s":448618},{"n":"Saavedra Huinca Juan Esteban","r":"13205033-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181997691","s":463738},{"n":"Salas Neira Cecilia Ester","r":"9940169-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"583871067","s":463080},{"n":"Saldias Arias Romina Francisca","r":"19707162-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2488967227","s":458217},{"n":"Sanchez Avila Judith Gisela","r":"10354021-6","t":"Tarde","c":"Auxiliar de Aseo","ch":"1147778043","s":463070},{"n":"Sanchez Figueroa Cristina Estrella","r":"13085413-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2182197771","s":449627},{"n":"Sandoval Avila Aurora Blanca","r":"8049382-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2471312539","s":441570},{"n":"Sandoval Rojas Veronica Luz","r":"8406939-6","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181683307","s":440850},{"n":"Sangama Pinchi Caita","r":"24840981-9","t":"Mañana","c":"Auxiliar de Aseo","ch":"2181631499","s":463570},{"n":"Sarmiento Bustamante Carmen Adriana","r":"14324182-3","t":"Mañana","c":"Auxiliar de Aseo","ch":"2488574123","s":441435},{"n":"Segovia Vergara Sandra Benilde","r":"12648755-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"1153756155","s":462573},{"n":"Sepulveda Burgos Eduardo Patricio","r":"15744989-3","t":"Tarde","c":"Auxiliar de Aseo","ch":"2181444155","s":458886},{"n":"Sepulveda Gonzalez Karina Andrea","r":"16682316-1","t":"Mañana","c":"Auxiliar de Aseo","ch":"2489587611","s":441512},{"n":"Solis Serrano Berta Del Rosario","r":"13552920-6","t":"Tarde","c":"Auxiliar de Aseo","ch":"2488736987","s":455632},{"n":"Torrejon Opazo Ruth Betzabe","r":"16296457-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2139491739","s":458613},{"n":"Torres Carrera Maria Magdalena","r":"16418294-0","t":"Mañana","c":"Auxiliar de Aseo","ch":"2138061627","s":453586},{"n":"Torres Sepulveda Maria Pas","r":"17845994-5","t":"Mañana","c":"Auxiliar de Aseo","ch":"2136537499","s":448539},{"n":"Ugalde Vega Teresa De Jesus","r":"8329922-3","t":"Tarde","c":"Auxiliar de Aseo","ch":"2488483259","s":451138},{"n":"Urtubia Collarte Rose Mary","r":"22541696-6","t":"Mañana","c":"Auxiliar de Aseo","ch":"2138037163","s":462882},{"n":"Valderrama Elgueda Amandina Del Carmen","r":"5744150-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"2138748699","s":448557},{"n":"Valdes Morales Daniel Jacob","r":"8111829-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"2470193387","s":459110},{"n":"Valentin Solis Liliana Magaly","r":"22232561-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"2138103819","s":448943},{"n":"Valenzuela Quintana Ximena Amelia","r":"12474217-K","t":"Tarde","c":"Auxiliar de Aseo","ch":"2488899515","s":462388},{"n":"Venegas Valladares Samuel Alejandro","r":"10998771-9","t":"Tarde","c":"Auxiliar de Aseo","ch":"2137144891","s":455300},{"n":"Vergara Garcia Carlos David Eduardo","r":"9745247-4","t":"Tarde","c":"Auxiliar de Aseo","ch":"2138104907","s":454480},{"n":"Vidal Sanchez Andrea Del Pilar","r":"16387423-7","t":"Mañana","c":"Auxiliar de Aseo","ch":"2435606827","s":463859},{"n":"Villagra Carrillo Monica Del Carmen","r":"9491173-7","t":"Tarde","c":"Auxiliar de Aseo","ch":"2139689387","s":462559},{"n":"Villarroel Nuñez Ricardo Daniel","r":"18075464-4","t":"Mañana","c":"Auxiliar de Aseo","ch":"2489004491","s":443974},{"n":"Villarroel Villarroel Felipe Andres","r":"17006699-5","t":"Tarde","c":"Auxiliar de Aseo","ch":"2140385851","s":441053},{"n":"Villca Molliri Feliciana","r":"24429246-1","t":"Tarde","c":"Auxiliar de Aseo","ch":"2139062283","s":462058},{"n":"Yarce Ortiz Maximiliano","r":"24675328-8","t":"Tarde","c":"Auxiliar de Aseo","ch":"2489507611","s":450335}];
+/* ========================================================= */
+
+const S={supervisor:"",turno:"",zona:"",estacion:"",jefe:"",condJefe:"",estDupla:"",obsEnc:"",gps:null,dist:null,
+  trab:null,busca:"",resp:{},obsItem:{},obsGeneral:"",fotos:[],firma:null};
+const STEPS=["ident","trab",...SECCIONES.filter(s=>s.id!=="aux").map(s=>s.id),"fotos","cierre"];
+let cur=0;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const opts=(arr,sel,ph)=>`<option value="">${ph}</option>`+arr.map(v=>`<option ${v===sel?"selected":""}>${esc(v)}</option>`).join("");
+const todasEst=()=>Object.values(ZONAS).flat();
+function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(t._t);t._t=setTimeout(()=>t.style.display="none",3200);}
+
+function haversine(a,b,c,d){const R=6371000,r=x=>x*Math.PI/180,dl=r(c-a),dn=r(d-b);
+  const h=Math.sin(dl/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dn/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(h)));}
+function gpsClase(){if(!S.gps)return"";if(S.dist==null)return"y";return S.dist<=GPS_OK?"g":S.dist<=GPS_WARN?"y":"r";}
+function gpsEstado(){return {g:"Verde",y:S.dist==null?"Sin coordenadas":"Amarillo",r:"Rojo"}[gpsClase()]||"";}
+function calcDist(){const c=COORDS[S.estacion];S.dist=(S.gps&&c)?haversine(S.gps.lat,S.gps.lng,c[0],c[1]):null;}
+
+function itemsHtml(sec){
+  return sec.items.map((it,i)=>{const k=sec.id+"_"+i,r=S.resp[k];
+    return `<div class="item" id="it_${k}"><p>${esc(it)}</p>
+      <div class="seg"><button data-k="${k}" data-v="c" class="c ${r==="c"?"sel":""}">Cumple</button><button data-k="${k}" data-v="n" class="n ${r==="n"?"sel":""}">No cumple</button></div>
+      ${r==="n"?`<textarea data-o="${k}" placeholder="Observación (obligatoria)">${esc(S.obsItem[k]||"")}</textarea>`:""}</div>`;}).join("");
+}
+function bindItems(){
+  document.querySelectorAll(".item .seg").forEach(g=>g.onclick=e=>{const b=e.target.closest("button");if(!b)return;
+    S.resp[b.dataset.k]=b.dataset.v;if(b.dataset.v==="c")delete S.obsItem[b.dataset.k];render(true);});
+  document.querySelectorAll("textarea[data-o]").forEach(t=>t.oninput=e=>S.obsItem[t.dataset.o]=e.target.value);
+}
+
+function render(keepScroll){
+  $("#prog").innerHTML=STEPS.map((_,i)=>`<i class="${i<cur?"done":i===cur?"now":""}"></i>`).join("");
+  $("#paso").textContent=`Paso ${cur+1} de ${STEPS.length}`;
+  $("#back").style.visibility=cur?"visible":"hidden";
+  const id=STEPS[cur];$("#next").textContent=id==="cierre"?"Enviar fiscalización":"Siguiente";
+  const v=$("#view"),y=window.scrollY;let h="";
+
+  if(id==="ident"){
+    const c=gpsClase();
+    h=`<h2>Identificación</h2><p class="sub">${new Date().toLocaleDateString("es-CL",{weekday:"long",day:"numeric",month:"long"})}</p>
+    <div class="card">
+      <label for="sup">Supervisor</label><select id="sup">${opts(SUPERVISORES,S.supervisor,"Selecciona supervisor…")}</select>
+      <label for="tur">Turno</label><select id="tur">${opts(TURNOS,S.turno,"Selecciona turno…")}</select>
+      <label for="zon">Zona</label><select id="zon">${opts(Object.keys(ZONAS),S.zona,"Selecciona zona…")}</select>
+      <label for="est">Estación</label><select id="est" ${S.zona?"":"disabled"}>${opts(ZONAS[S.zona]||[],S.estacion,S.zona?"Selecciona estación…":"Primero elige la zona")}</select>
+    </div>
+    <div class="card"><h3>Jefe de estación</h3>
+      <label for="je">Nombre</label><input id="je" type="text" value="${esc(S.jefe)}">
+      <label>Condición</label><div class="seg" id="cond">
+        <button data-v="Presente" class="${S.condJefe==="Presente"?"sel":""}">Presente</button>
+        <button data-v="Dupla" class="${S.condJefe==="Dupla"?"sel":""}">Dupla</button></div>
+      ${S.condJefe==="Dupla"?`<label for="ed">¿En qué estación se encuentra?</label><select id="ed">${opts(todasEst().filter(e=>e!==S.estacion),S.estDupla,"Selecciona estación…")}</select>`:""}
+      <label for="oe">Observación</label><textarea id="oe" placeholder="Opcional">${esc(S.obsEnc)}</textarea>
+    </div>
+    <div class="card"><h3>Ubicación</h3>
+      <button id="cap" class="btn-verde">${S.gps?"Volver a capturar":"Capturar ubicación"}</button>
+      ${S.gps?`<div class="gps ${c}"><strong>${S.dist!=null?S.dist.toLocaleString("es-CL")+" m":"Ubicación capturada"}</strong>
+        ${S.dist!=null?({g:"Dentro del radio de la estación",y:"Fuera del radio recomendado",r:"Lejos de la estación"}[c]):"Esta estación aún no tiene coordenadas cargadas; se guarda tu posición igual"} · precisión ±${S.gps.acc} m</div>`:""}
+      <p class="note" id="gpsmsg"></p></div>`;
+    v.innerHTML=h;
+    $("#sup").onchange=e=>S.supervisor=e.target.value;
+    $("#tur").onchange=e=>{if(S.turno!==e.target.value){S.turno=e.target.value;S.trab=null;}};
+    $("#zon").onchange=e=>{S.zona=e.target.value;S.estacion="";S.dist=null;render(true);};
+    $("#est").onchange=e=>{S.estacion=e.target.value;if(S.estDupla===S.estacion)S.estDupla="";calcDist();render(true);};
+    $("#je").oninput=e=>S.jefe=e.target.value;
+    $("#cond").onclick=e=>{const b=e.target.closest("button");if(!b)return;S.condJefe=b.dataset.v;if(S.condJefe==="Presente")S.estDupla="";render(true);};
+    const ed=$("#ed");if(ed)ed.onchange=e=>S.estDupla=e.target.value;
+    $("#oe").oninput=e=>S.obsEnc=e.target.value;
+    $("#cap").onclick=()=>{
+      if(!S.estacion){toast("Primero selecciona la estación.");return;}
+      $("#gpsmsg").textContent="Obteniendo ubicación…";
+      if(!navigator.geolocation){$("#gpsmsg").textContent="Este equipo no permite GPS.";return;}
+      navigator.geolocation.getCurrentPosition(p=>{
+        S.gps={lat:+p.coords.latitude.toFixed(6),lng:+p.coords.longitude.toFixed(6),acc:Math.round(p.coords.accuracy),hora:new Date().toISOString()};
+        calcDist();render(true);
+      },err=>{$("#gpsmsg").textContent="No se pudo obtener la ubicación. Activa el GPS y permite el acceso en el navegador.";},
+      {enableHighAccuracy:true,timeout:20000,maximumAge:0});
+    };
+  }
+
+  else if(id==="trab"){
+    const q=S.busca.trim().toLowerCase();
+    const lista=TRABAJADORES.filter(t=>t.t===S.turno&&(!q||t.n.toLowerCase().includes(q)||t.r.toLowerCase().replace(/\./g,"").includes(q.replace(/\./g,""))));
+    const sec=SECCIONES[0];
+    h=`<h2>Auxiliar de aseo</h2><p class="sub">Turno ${esc(S.turno)}: ${TRABAJADORES.filter(t=>t.t===S.turno).length} trabajadores</p>
+    <div class="card">
+      <label for="bq">Buscar por nombre o RUT</label><input id="bq" type="search" value="${esc(S.busca)}" autocomplete="off">
+      <div class="lista" id="lst">${lista.length?lista.slice(0,80).map(t=>`<button data-r="${t.r}" class="${S.trab?.r===t.r?"sel":""}">${esc(t.n)}<br><small>${t.r}</small></button>`).join(""):`<p class="note" style="padding:10px">Sin resultados en el turno ${esc(S.turno)}.</p>`}</div>
+      ${S.trab?`<div class="ficha"><b>Nombre</b><span>${esc(S.trab.n)}</span><b>RUT</b><span>${S.trab.r}</span><b>Cargo</b><span>${esc(S.trab.c)}</span><b>N° chip</b><span>${S.trab.ch||"Sin registro"}</span></div>`:""}
+    </div>
+    <div class="card"><h3>${sec.titulo}</h3>${itemsHtml(sec)}</div>`;
+    v.innerHTML=h;
+    const bq=$("#bq");bq.oninput=e=>{S.busca=e.target.value;const p=bq.selectionStart;render(true);const n=$("#bq");n.focus();n.setSelectionRange(p,p);};
+    $("#lst").onclick=e=>{const b=e.target.closest("button");if(!b)return;S.trab=TRABAJADORES.find(t=>t.r===b.dataset.r);render(true);};
+    bindItems();
+  }
+
+  else if(SECCIONES.some(s=>s.id===id)){
+    const sec=SECCIONES.find(s=>s.id===id);
+    h=`<h2>${sec.titulo}</h2><p class="sub">${esc(S.estacion)}</p><div class="card">${itemsHtml(sec)}</div>`;
+    v.innerHTML=h;bindItems();
+  }
+
+  else if(id==="fotos"){
+    h=`<h2>Evidencia</h2><p class="sub">Hasta ${MAX_FOTOS} fotos de los hallazgos.</p>
+    <div class="card"><input type="file" id="foto" accept="image/*" capture="environment" ${S.fotos.length>=MAX_FOTOS?"disabled":""}>
+      <div class="thumbs">${S.fotos.map((f,i)=>`<div><img src="${f}" alt="Foto ${i+1}"><button data-i="${i}" aria-label="Quitar foto">✕</button></div>`).join("")}</div>
+      <label for="og">Observación general</label><textarea id="og">${esc(S.obsGeneral)}</textarea></div>`;
+    v.innerHTML=h;
+    $("#foto").onchange=async e=>{const f=e.target.files[0];if(!f)return;S.fotos.push(await comprimir(f));render(true);};
+    v.querySelectorAll(".thumbs button").forEach(b=>b.onclick=()=>{S.fotos.splice(+b.dataset.i,1);render(true);});
+    $("#og").oninput=e=>S.obsGeneral=e.target.value;
+  }
+
+  else if(id==="cierre"){
+    const p=puntaje(),nc=noCumple();
+    h=`<h2>Resumen</h2><p class="sub">${esc(S.estacion)} · ${esc(S.zona)} · turno ${esc(S.turno)}</p>
+    <div class="score">${p.total}%</div><p class="sub">de cumplimiento (${nc.length} punto${nc.length===1?"":"s"} sin cumplir)</p>
+    <div class="card"><table>
+      <tr><td>Supervisor</td><td>${esc(S.supervisor)}</td></tr>
+      <tr><td>Jefe de estación</td><td>${esc(S.jefe)} · ${S.condJefe}${S.condJefe==="Dupla"?" ("+esc(S.estDupla)+")":""}</td></tr>
+      <tr><td>Auxiliar</td><td>${esc(S.trab.n)}</td></tr>
+      <tr><td>GPS</td><td>${S.dist!=null?S.dist+" m":"Sin coordenadas"}</td></tr>
+      ${SECCIONES.map(s=>`<tr><td>${s.titulo.replace("Revisión ","")}</td><td>${p.sec[s.id]}%</td></tr>`).join("")}
+    </table></div>
+    ${nc.length?`<div class="card"><h3>Puntos sin cumplir</h3><table>${nc.map(x=>`<tr><td>${esc(x.seccion)}: ${esc(x.item)}</td><td style="font-weight:400">${esc(x.obs)}</td></tr>`).join("")}</table></div>`:""}
+    <div class="card"><label>Firma ${S.condJefe==="Presente"?"del jefe de estación":"de quien recibe (opcional, jefe en dupla)"}</label>
+      <canvas id="firma"></canvas><button id="limpiar" style="margin-top:8px">Borrar firma</button></div>`;
+    v.innerHTML=h;initFirma();
+  }
+  if(!keepScroll)window.scrollTo(0,0);else window.scrollTo(0,y);
+}
+
+function puntaje(){let tc=0,tn=0;const sec={};
+  SECCIONES.forEach(s=>{const c=s.items.filter((_,i)=>S.resp[s.id+"_"+i]==="c").length;sec[s.id]=Math.round(c/s.items.length*100);tc+=c;tn+=s.items.length;});
+  return {total:Math.round(tc/tn*100),sec};}
+function noCumple(){return SECCIONES.flatMap(s=>s.items.map((it,i)=>({k:s.id+"_"+i,seccion:s.titulo.replace("Revisión ",""),item:it}))
+  .filter(x=>S.resp[x.k]==="n").map(x=>({...x,obs:S.obsItem[x.k]||""})));}
+
+function validarItems(sec){
+  const f=sec.items.map((_,i)=>sec.id+"_"+i).filter(k=>!S.resp[k]);
+  if(f.length){f.forEach(k=>$("#it_"+k).classList.add("miss"));$("#it_"+f[0]).scrollIntoView({behavior:"smooth",block:"center"});return`Faltan ${f.length} punto(s) por evaluar.`;}
+  const o=sec.items.map((_,i)=>sec.id+"_"+i).filter(k=>S.resp[k]==="n"&&!(S.obsItem[k]||"").trim());
+  if(o.length){$("#it_"+o[0]).scrollIntoView({behavior:"smooth",block:"center"});return"Escribe la observación de cada punto que no cumple.";}
+  return null;}
+
+function validar(){const id=STEPS[cur];
+  if(id==="ident"){
+    if(!S.supervisor)return"Selecciona el supervisor.";if(!S.turno)return"Selecciona el turno.";
+    if(!S.zona)return"Selecciona la zona.";if(!S.estacion)return"Selecciona la estación.";
+    if(!S.jefe.trim())return"Escribe el nombre del jefe de estación.";if(!S.condJefe)return"Indica si el jefe de estación está presente o en dupla.";
+    if(S.condJefe==="Dupla"&&!S.estDupla)return"Indica en qué estación está el jefe de estación.";
+    if(!S.gps)return"Captura la ubicación para continuar.";
+    if(S.dist!=null&&S.dist>GPS_WARN&&!confirm(`Estás a ${S.dist} m de ${S.estacion}. ¿Continuar igual? Quedará registrado.`))return"";}
+  if(id==="trab"){if(!S.trab)return"Selecciona al auxiliar de aseo.";return validarItems(SECCIONES[0]);}
+  const sec=SECCIONES.find(s=>s.id===id);if(sec)return validarItems(sec);
+  if(id==="cierre"&&S.condJefe==="Presente"&&!S.firma)return"Falta la firma del jefe de estación.";
+  return null;}
+
+function comprimir(file){return new Promise(res=>{const img=new Image();img.onload=()=>{const m=1024,k=Math.min(1,m/Math.max(img.width,img.height));
+  const cv=document.createElement("canvas");cv.width=img.width*k;cv.height=img.height*k;cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);
+  URL.revokeObjectURL(img.src);res(cv.toDataURL("image/jpeg",.6));};img.src=URL.createObjectURL(file);});}
+
+function initFirma(){const cv=$("#firma"),r=cv.getBoundingClientRect(),dpr=devicePixelRatio||1;
+  cv.width=r.width*dpr;cv.height=r.height*dpr;const x=cv.getContext("2d");x.scale(dpr,dpr);x.lineWidth=2.2;x.lineCap="round";x.strokeStyle="#1E2A2E";
+  if(S.firma){const im=new Image();im.onload=()=>x.drawImage(im,0,0,r.width,r.height);im.src=S.firma;}
+  let d=false;const pt=e=>{const b=cv.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top];};
+  cv.onpointerdown=e=>{d=true;cv.setPointerCapture(e.pointerId);x.beginPath();x.moveTo(...pt(e));};
+  cv.onpointermove=e=>{if(d){x.lineTo(...pt(e));x.stroke();}};
+  cv.onpointerup=()=>{d=false;S.firma=cv.toDataURL("image/png");};
+  $("#limpiar").onclick=()=>{x.clearRect(0,0,cv.width,cv.height);S.firma=null;};}
+
+/* -------- Envío (formulario oculto, igual que la app de seguridad) + cola sin conexión -------- */
+const QK="fisc_limpieza_l5_pend";
+const cola=()=>{try{return JSON.parse(localStorage.getItem(QK)||"[]");}catch{return[];}};
+function setCola(q){try{localStorage.setItem(QK,JSON.stringify(q));}catch{toast("Memoria del equipo llena: no se pudo guardar el pendiente.");}pintarCola();}
+function pintarCola(){const n=cola().length,el=$("#pend");el.style.display=n?"block":"none";
+  el.innerHTML=n?`${n} fiscalización(es) guardada(s) sin enviar. <button id="reenv" style="padding:6px 10px;margin-left:6px">Enviar ahora</button>`:"";
+  if(n)$("#reenv").onclick=reintentar;}
+function post(d){return new Promise((res,rej)=>{
+  if(!SCRIPT_URL||!navigator.onLine)return rej();
+  const f=document.createElement("form");f.method="POST";f.action=SCRIPT_URL;f.target="envio";f.style.display="none";
+  const i=document.createElement("input");i.type="hidden";i.name="payload";i.value=JSON.stringify(d);f.appendChild(i);
+  document.body.appendChild(f);f.submit();setTimeout(()=>{f.remove();res();},2500);});}
+async function reintentar(){const q=cola(),rest=[];for(const d of q){try{await post(d);}catch{rest.push(d);}}setCola(rest);
+  toast(rest.length?`Quedan ${rest.length} sin enviar. Revisa la conexión.`:"Fiscalizaciones pendientes enviadas.");}
+
+function armar(){const p=puntaje();
+  return {id:"FL5-"+Date.now(),fecha:new Date().toISOString(),supervisor:S.supervisor,turno:S.turno,zona:S.zona,estacion:S.estacion,
+    jefe:S.jefe.trim(),condJefe:S.condJefe,estDupla:S.estDupla,obsEnc:S.obsEnc,
+    lat:S.gps.lat,lng:S.gps.lng,precision:S.gps.acc,distancia:S.dist??"",estadoGps:gpsEstado(),
+    auxNombre:S.trab.n,auxRut:S.trab.r,auxCargo:S.trab.c,auxChip:S.trab.ch,auxSap:S.trab.s,
+    total:p.total,porSeccion:p.sec,
+    detalle:SECCIONES.flatMap(s=>s.items.map((it,i)=>({seccion:s.titulo,item:it,resultado:S.resp[s.id+"_"+i]==="c"?"Cumple":"No cumple",obs:S.obsItem[s.id+"_"+i]||""}))),
+    obsGeneral:S.obsGeneral,firma:S.firma||"",fotos:S.fotos};}
+
+async function enviar(){const d=armar();$("#next").disabled=true;$("#next").textContent="Enviando…";
+  let ok=true;try{await post(d);}catch{ok=false;setCola([...cola(),d]);}
+  document.querySelector("nav").style.display="none";
+  $("#view").innerHTML=`<h2>${ok?"Fiscalización enviada":"Guardada en el equipo"}</h2>
+    <p class="sub">${ok?"Registro "+d.id+" enviado.":"Sin conexión o sin URL configurada. Usa “Enviar ahora” cuando tengas señal."}</p>
+    <div class="score">${d.total}%</div><p class="sub">${esc(d.estacion)} · ${esc(d.auxNombre)}</p>
+    <button id="nueva" class="btn-verde" style="margin-top:16px">Nueva fiscalización</button>`;
+  $("#nueva").onclick=()=>{sessionStorage.setItem("fl5_sup",S.supervisor);sessionStorage.setItem("fl5_tur",S.turno);location.reload();};
+  pintarCola();window.scrollTo(0,0);}
+
+$("#next").onclick=()=>{const e=validar();if(e===""){return;}if(e){toast(e);return;}
+  if(STEPS[cur]==="cierre"){enviar();return;}cur++;render();};
+$("#back").onclick=()=>{if(cur){cur--;render();}};
+try{S.supervisor=sessionStorage.getItem("fl5_sup")||"";S.turno=sessionStorage.getItem("fl5_tur")||"";}catch{}
+window.addEventListener("online",()=>{if(cola().length)reintentar();});
+pintarCola();render();
+</script>
+</body>
+</html>
