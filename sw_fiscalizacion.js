@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fiscalizacion-ms-v1';
+const CACHE_NAME = 'fiscalizacion-ms-v2';
 const ASSETS = [
   '/metroseguridad/fiscalizacion_ms.html',
   '/metroseguridad/manifest_fiscalizacion.json',
