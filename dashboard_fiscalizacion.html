@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Fiscalización | MetroSeguridad</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0F1124;--sf:#1A1E36;--sf2:#242952;--acc:#FF4B2B;--acc-l:rgba(255,75,43,.12);--grn:#1DB86A;--grn-l:rgba(29,184,106,.12);--red:#E83A3A;--red-l:rgba(232,58,58,.12);--ylw:#F5A623;--ylw-l:rgba(245,166,35,.12);--blu:#3B82F6;--txt:#EEF0FB;--txt2:#8E97C7;--bdr:#2A2F55;--r:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.hd{background:var(--sf);border-bottom:1px solid var(--bdr);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:8px}
+.pip{width:8px;height:8px;background:var(--acc);border-radius:50%}
+.brand-t{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--txt2)}
+.page-t{font-size:17px;font-weight:700}
+.last-upd{font-size:12px;color:var(--txt2)}
+.wrap{max-width:1440px;margin:0 auto;padding:24px 28px}
+.banner{background:var(--acc-l);border:1px solid var(--acc);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:13px;display:none}
+.banner.show{display:block}
+.banner code{background:var(--sf2);padding:2px 7px;border-radius:4px;font-family:monospace;font-size:12px}
+.filters{display:flex;align-items:center;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.fl-lbl{font-size:12px;color:var(--txt2);font-weight:600}
+.fb{padding:7px 16px;border-radius:6px;border:1.5px solid var(--bdr);background:var(--sf);color:var(--txt2);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+.fb:hover{border-color:var(--txt2);color:var(--txt)}
+.fb.on{border-color:var(--acc);color:var(--acc);background:var(--acc-l)}
+.fb.refresh{margin-left:auto;border-color:var(--txt2)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+.kpi{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r);padding:20px}
+.kpi-lbl{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--txt2);margin-bottom:8px}
+.kpi-val{font-size:34px;font-weight:700;line-height:1;margin-bottom:6px}
+.kpi-sub{font-size:12px;color:var(--txt2)}
+.c-acc{color:var(--acc)}.c-ok{color:var(--grn)}.c-warn{color:var(--ylw)}.c-bad{color:var(--red)}.c-blu{color:var(--blu)}
+.row{display:grid;gap:16px;margin-bottom:16px}
+.r2{grid-template-columns:2fr 1fr}
+.r22{grid-template-columns:1fr 1fr}
+.r1{grid-template-columns:1fr}
+.card{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;min-width:0}
+.c-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--txt2);margin-bottom:16px}
+.chart-wrap{position:relative;height:260px}
+.chart-wrap.tall{height:320px}
+.chart-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--txt2);font-size:13px}
+.tbl-wrap{overflow-x:auto;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
+th{text-align:left;padding:10px 12px;color:var(--txt2);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;border-bottom:1px solid var(--bdr);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--bdr);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.b-ok{color:var(--grn);font-weight:600;font-size:12px}
+.b-no{color:var(--red);font-weight:600;font-size:12px}
+.b-na{color:var(--txt2);font-size:12px}
+.tipo-d{background:var(--acc-l);color:var(--acc);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.tipo-a{background:var(--grn-l);color:var(--grn);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--txt2);gap:16px}
+.spinner{width:36px;height:36px;border:3px solid var(--bdr);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:40px;color:var(--txt2);font-size:14px}
+.sec-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:30px 0 14px;font-size:16px;font-weight:700}
+.sec-h small{font-size:12px;color:var(--txt2);font-weight:400}
+.kpi-grid.g6{grid-template-columns:repeat(6,1fr)}
+.kpi-grid.g6 .kpi-val{font-size:30px}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.p-pend{background:var(--red-l);color:var(--red)}.p-ges{background:var(--ylw-l);color:var(--ylw)}.p-ok{background:var(--grn-l);color:var(--grn)}
+.live{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--grn);margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.3}}
+@media(max-width:1100px){.kpi-grid.g6{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-grid.g6{grid-template-columns:repeat(2,1fr)}.r2,.r22{grid-template-columns:1fr}.wrap{padding:16px}.hd{padding:12px 16px}}
+@media(max-width:480px){.kpi-grid{grid-template-columns:1fr 1fr}.kpi-val{font-size:26px}.page-t{font-size:14px}}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="brand"><div class="pip"></div><span class="brand-t">MetroSeguridad</span></div>
+  <div class="page-t">Panel de Fiscalización</div>
+  <div class="last-upd" id="lastUpd">—</div>
+</header>
+
+<div class="wrap">
+  <div class="banner" id="banner"></div>
+
+  <div class="filters">
+    <span class="fl-lbl">Período:</span>
+    <button class="fb" data-p="today" onclick="setPeriod('today')">Hoy</button>
+    <button class="fb" data-p="week"  onclick="setPeriod('week')">Esta semana</button>
+    <button class="fb" data-p="month" onclick="setPeriod('month')">Este mes</button>
+    <button class="fb" data-p="all"   onclick="setPeriod('all')">Todo</button>
+    <button class="fb refresh" onclick="refresh()">↺ Actualizar</button>
+  </div>
+
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="loading" style="grid-column:1/-1"><div class="spinner"></div>Cargando datos...</div>
+  </div>
+
+  <div class="row r2">
+    <div class="card"><div class="c-title">Actividad diaria</div><div class="chart-wrap"><canvas id="cActivity"></canvas></div></div>
+    <div class="card"><div class="c-title">Tipo de fiscalización</div><div class="chart-wrap"><canvas id="cTipo"></canvas></div></div>
+  </div>
+
+  <div class="row r1">
+    <div class="card"><div class="c-title">Cumplimiento por categoría (%)</div><div class="chart-wrap tall"><canvas id="cCumpl"></canvas></div></div>
+  </div>
+
+  <div class="row r22">
+    <div class="card"><div class="c-title">Fiscalizaciones por zona</div><div class="chart-wrap"><canvas id="cZona"></canvas></div></div>
+    <div class="card"><div class="c-title">Por cargo fiscalizado</div><div class="chart-wrap"><canvas id="cCargo"></canvas></div></div>
+  </div>
+
+  <div class="row r22">
+    <div class="card"><div class="c-title">Fiscalizaciones por responsable</div><div class="chart-wrap"><canvas id="cResp"></canvas></div></div>
+    <div class="card"><div class="c-title">Categorías con más incumplimientos</div><div class="chart-wrap"><canvas id="cIncumpl"></canvas></div></div>
+  </div>
+
+  <div class="sec-h">🔧 Seguimiento de brechas <small id="brSub">Verificaciones y correcciones en terreno · se actualiza cada minuto</small></div>
+  <div class="kpi-grid g6" id="brKpi"></div>
+  <div class="row r2">
+    <div class="card"><div class="c-title">Estado de brechas por concepto</div><div class="chart-wrap tall"><canvas id="cBrCat"></canvas></div></div>
+    <div class="card"><div class="c-title">Estado general</div><div class="chart-wrap tall"><canvas id="cBrEst"></canvas></div></div>
+  </div>
+  <div class="row r22">
+    <div class="card"><div class="c-title">Cierres por día</div><div class="chart-wrap"><canvas id="cBrDia"></canvas></div></div>
+    <div class="card"><div class="c-title">Brechas abiertas por zona</div><div class="chart-wrap"><canvas id="cBrZona"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-bottom:16px"><div class="c-title">Verificaciones recientes</div><div id="tblCorr"><div class="empty">Sin datos</div></div></div>
+  <div class="card" style="margin-bottom:16px"><div class="c-title">Brechas abiertas más antiguas</div><div id="tblOpen"><div class="empty">Sin datos</div></div></div>
+
+  <div class="sec-h">📋 Detalle de fiscalizaciones</div>
+  <div class="card">
+    <div class="c-title">Últimas fiscalizaciones</div>
+    <div id="tblContainer"><div class="empty">Sin datos</div></div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBdPl1DBa2rQEpiqUg1WtSEhL6NjcPpe-eV2jlkDhUwdcrBUvObwfzf1-XpBgBpNeq/exec';
+
+// ── COLUMNAS (mismo orden que HEADERS del Apps Script) ────────────
+const C = {TS:0,TIPO:1,FECHA:2,HORA:3,SUP:4,INSP:5,LINEA:6,ZONA:7,EST:8,
+  LAT:9,LON:10,GD:11,GA:12,JEFE:13,NOM:14,RUT:15,CARGO:16,TURNO:17,
+  UNIF:18,PRENDAS:19,CREDC:20,CREDOS:21,EPP:22,RADIO:23,MANOS:24,
+  LLAVE:25,PRES:26,PRES_OBS:27,POS:28,DIR:29,DIR_OBS:30,
+  C1:31,C2:32,C3:33,C4:34,CEL:35,OBS:36,CT1:37};
+
+let allRows=[], allSeg=[], period='week', charts={};
+
+// ── UTILIDADES ────────────────────────────────────────────────────
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const lc=v=>String(v??'').trim().toLowerCase();
+const pad=n=>String(n).padStart(2,'0');
+
+function showBanner(html){const b=document.getElementById('banner');b.innerHTML=html;b.classList.add('show');}
+function hideBanner(){document.getElementById('banner').classList.remove('show');}
+
+// Acepta "07/10/2026", "07-10-2026", "2026-10-07", ISO "2026-10-07T03:00:00.000Z"
+function parseDate(s){
+  if(!s)return null;
+  const t=String(s).trim();
+  let m=t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})T/);              // ISO con hora (Date serializado)
+  if(m){const d=new Date(t);return isNaN(d)?null:new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+  m=t.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);          // yyyy-mm-dd
+  if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+  m=t.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);        // dd/mm/yyyy
+  if(m){let y=+m[3];if(y<100)y+=2000;return new Date(y,+m[2]-1,+m[1]);}
+  return null;
+}
+const fmtDate=d=>d?`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`:'—';
+
+function fmtHora(v){
+  if(!v)return'';
+  const t=String(v);
+  if(/T\d{2}:\d{2}/.test(t)){const d=new Date(t);if(!isNaN(d))return`${pad(d.getHours())}:${pad(d.getMinutes())}`;}
+  return t;
+}
+
+// Fecha efectiva de la fila: columna Fecha y, si falla, el Timestamp
+function rowDate(r){return parseDate(r[C.FECHA])||parseDate(r[C.TS]);}
+
+// ── FETCH JSONP ───────────────────────────────────────────────────
+function fetchData(){
+  return new Promise((res,rej)=>{
+    if(!SCRIPT_URL){showBanner('⚠️ Configura <code>SCRIPT_URL</code> al inicio del script con la URL de tu Apps Script.');res({rows:[]});return;}
+    const cb='cb_'+Date.now();
+    const s=document.createElement('script');
+    let timer;
+    const cleanup=()=>{clearTimeout(timer);delete window[cb];s.remove();};
+    window[cb]=(data)=>{
+      cleanup();
+      if(data&&data.error){rej(new Error(data.error));return;}
+      res(data||{});
+    };
+    s.src=`${SCRIPT_URL}?action=getData&callback=${cb}&_=${Date.now()}`;
+    s.onerror=()=>{cleanup();rej(new Error('No se pudo conectar con el Apps Script (revisa que esté implementado con acceso "Cualquier persona").'));};
+    document.body.appendChild(s);
+    timer=setTimeout(()=>{cleanup();rej(new Error('Tiempo de espera agotado (15 s).'));},15000);
+  });
+}
+
+// ── FILTRO PERÍODO ────────────────────────────────────────────────
+function setPeriod(p){
+  period=p;
+  document.querySelectorAll('.fb[data-p]').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  render(filter(allRows));
+}
+
+function inPeriod(d){
+  if(period==='all')return true;
+  if(!d)return false;
+  const now=new Date(),sod=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const mon=new Date(sod);mon.setDate(sod.getDate()-((sod.getDay()+6)%7));
+  if(period==='today')return d.getTime()===sod.getTime();
+  if(period==='week')return d>=mon&&d<=sod;
+  if(period==='month')return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+  return true;
+}
+function filter(rows){return period==='all'?rows:rows.filter(r=>inPeriod(rowDate(r)));}
+
+// ── REGLAS DE CUMPLIMIENTO (una sola fuente para KPIs, gráficos y tabla) ──
+const isNA=v=>lc(v).includes('no aplica');
+const R={
+  ok:v=>{const s=lc(v);return s.includes('cumple')&&!s.includes('no cumple');},
+  tiene:v=>lc(v)==='tiene',
+  buena:v=>lc(v)==='buena',
+  aplica:v=>{const s=lc(v);return s==='aplica'||(s.includes('cumple')&&!s.includes('no cumple'));},
+  epp:v=>!lc(v).includes('no cumple')
+};
+// [etiqueta, columna, regla, se omite si "No aplica", se omite si vacío]
+const CATS=[
+  ['Uniforme',C.UNIF,R.ok,false,false],
+  ['Cred. Contratista',C.CREDC,R.tiene,false,false],
+  ['Cred. OS-10',C.CREDOS,R.tiene,true,false],
+  ['EPP',C.EPP,R.epp,false,true],
+  ['Radio',C.RADIO,R.ok,false,false],
+  ['Manos libres',C.MANOS,R.ok,false,false],
+  ['Presentación',C.PRES,R.buena,false,false],
+  ['Posición',C.POS,R.ok,false,false],
+  ['Directiva',C.DIR,R.aplica,true,false],
+  ['Celular',C.CEL,R.ok,false,false]
+];
+// Devuelve {cat: true(cumple)/false(no cumple)} sólo para las categorías evaluables
+function evalRow(r){
+  const o={};
+  CATS.forEach(([k,col,fn,skipNA,skipEmpty])=>{
+    const v=r[col];
+    if(skipNA&&isNA(v))return;
+    if(skipEmpty&&lc(v)==='')return;
+    o[k]=!!fn(v);
+  });
+  return o;
+}
+const rowFails=r=>Object.values(evalRow(r)).some(x=>!x);
+
+// ── MÉTRICAS ──────────────────────────────────────────────────────
+const pct=(ok,tot)=>tot>0?Math.round(ok/tot*100):null;
+const shortCargo=s=>String(s||'—').replace('Guardia de Línea','G. Línea').replace('Asistente de Servicio','Asistente').replace('Guardia Taller','G. Taller').replace('Guardia Edificio','G. Edificio').replace('Patrulla / Táctico','Patrulla');
+const isDiaria=r=>lc(r[C.TIPO])==='fiscalización diaria'||lc(r[C.TIPO])==='fiscalizacion diaria';
+const respOf=r=>isDiaria(r)?r[C.SUP]:(r[C.INSP]||r[C.SUP]);
+const shortName=s=>String(s||'').trim().split(/\s+/).slice(-2).join(' ');
+
+function metrics(rows){
+  if(!rows.length)return null;
+  const byTipo={},byZona={},byCargo={},byDate={},byResp={},cm={};
+  CATS.forEach(([k])=>cm[k]=[0,0]);
+
+  rows.forEach(r=>{
+    const tipo=isDiaria(r)?'Diaria':'Aleatoria';
+    byTipo[tipo]=(byTipo[tipo]||0)+1;
+    const z=r[C.ZONA]||'Sin zona';byZona[z]=(byZona[z]||0)+1;
+    const cg=shortCargo(r[C.CARGO]);byCargo[cg]=(byCargo[cg]||0)+1;
+    const d=rowDate(r);if(d){const k=d.getTime();byDate[k]=(byDate[k]||0)+1;}
+    const rs=shortName(respOf(r));if(rs)byResp[rs]=(byResp[rs]||0)+1;
+    Object.entries(evalRow(r)).forEach(([k,ok])=>cm[k][ok?0:1]++);
+  });
+
+  const cp={};
+  Object.entries(cm).forEach(([k,[ok,no]])=>{const p=pct(ok,ok+no);if(p!==null)cp[k]=p;});
+  const vals=Object.values(cp);
+  const gen=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):null;
+  const incumpl=Object.entries(cp).map(([k,v])=>[k,100-v]).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  return{total:rows.length,byTipo,byZona,byCargo,byDate,byResp,cp,gen,incumpl};
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function render(rows){
+  const m=metrics(rows);
+  renderKPIs(rows,m);
+  renderCharts(m);
+  renderBrechasDash(rows);
+  const sorted=[...rows].sort((a,b)=>{
+    const da=rowDate(a),db=rowDate(b);
+    const ta=da?da.getTime():0,tb=db?db.getTime():0;
+    if(ta!==tb)return tb-ta;
+    return fmtHora(b[C.HORA]).localeCompare(fmtHora(a[C.HORA]));
+  });
+  renderTable(sorted.slice(0,15));
+}
+
+function renderKPIs(rows,m){
+  const g=document.getElementById('kpiGrid');
+  const plbl={today:'Hoy',week:'Esta semana',month:'Este mes',all:'Histórico'}[period];
+  if(!m){
+    const hint=allRows.length&&period!=='all'?` · hay ${allRows.length} registros en total, prueba con <b>Todo</b>`:'';
+    g.innerHTML=`<div class="kpi" style="grid-column:1/-1;text-align:center;color:var(--txt2)">Sin datos para ${plbl.toLowerCase()}${hint}</div>`;
+    return;
+  }
+  const gc=m.gen>=85?'c-ok':m.gen>=70?'c-warn':'c-bad';
+  const con=rows.filter(rowFails).length;
+  g.innerHTML=`
+    <div class="kpi"><div class="kpi-lbl">Fiscalizaciones</div><div class="kpi-val c-acc">${m.total}</div><div class="kpi-sub">${plbl}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Cumplimiento general</div><div class="kpi-val ${gc}">${m.gen!==null?m.gen+'%':'—'}</div><div class="kpi-sub">Promedio de categorías</div></div>
+    <div class="kpi"><div class="kpi-lbl">Con incumplimientos</div><div class="kpi-val ${con>0?'c-bad':'c-ok'}">${con}</div><div class="kpi-sub">${Math.round(con/m.total*100)}% del total</div></div>
+    <div class="kpi"><div class="kpi-lbl">Trabajadores únicos</div><div class="kpi-val" style="color:var(--txt)">${new Set(rows.map(r=>r[C.RUT]).filter(Boolean)).size}</div><div class="kpi-sub">${plbl.toLowerCase()}</div></div>`;
+}
+
+const sc=()=>({ticks:{color:'#8E97C7',font:{size:11}},grid:{color:'rgba(42,47,85,.7)'},border:{color:'transparent'}});
+const base={responsive:true,maintainAspectRatio:false};
+
+function draw(id,canvasId,cfg,hasData){
+  if(charts[id]){charts[id].destroy();delete charts[id];}
+  const cv=document.getElementById(canvasId),wrap=cv.parentElement;
+  wrap.querySelector('.chart-empty')?.remove();
+  if(!hasData){
+    cv.style.display='none';
+    const e=document.createElement('div');e.className='chart-empty';e.textContent='Sin datos';wrap.appendChild(e);
+    return;
+  }
+  cv.style.display='';
+  charts[id]=new Chart(cv,cfg);
+}
+
+function renderCharts(m){
+  const e=m||{byDate:{},byTipo:{},cp:{},byZona:{},byCargo:{},byResp:{},incumpl:[]};
+
+  const de=Object.entries(e.byDate).map(([t,c])=>({d:new Date(+t),c})).sort((a,b)=>a.d-b.d).slice(-30);
+  draw('act','cActivity',{type:'line',
+    data:{labels:de.map(x=>fmtDate(x.d).slice(0,5)),datasets:[{label:'Fiscalizaciones',data:de.map(x=>x.c),borderColor:'#FF4B2B',backgroundColor:'rgba(255,75,43,.1)',tension:.35,fill:true,pointRadius:3,pointBackgroundColor:'#FF4B2B'}]},
+    options:{...base,plugins:{legend:{display:false}},scales:{x:sc(),y:{...sc(),beginAtZero:true,ticks:{...sc().ticks,precision:0}}}}},de.length>0);
+
+  const td=Object.entries(e.byTipo);
+  draw('tipo','cTipo',{type:'doughnut',
+    data:{labels:td.map(([k])=>k),datasets:[{data:td.map(([,v])=>v),backgroundColor:td.map(([k])=>k==='Diaria'?'#FF4B2B':'#1DB86A'),borderWidth:0,hoverOffset:4}]},
+    options:{...base,plugins:{legend:{position:'bottom',labels:{color:'#8E97C7',padding:16,font:{size:12}}}}}},td.length>0);
+
+  const sk=Object.entries(e.cp).sort((a,b)=>a[1]-b[1]);
+  draw('cumpl','cCumpl',{type:'bar',
+    data:{labels:sk.map(([k])=>k),datasets:[{label:'% Cumplimiento',data:sk.map(([,v])=>v),backgroundColor:sk.map(([,v])=>v>=85?'#1DB86A':v>=70?'#F5A623':'#E83A3A'),borderRadius:6,borderSkipped:false}]},
+    options:{...base,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{...sc(),min:0,max:100,ticks:{callback:v=>v+'%',color:'#8E97C7'}},y:sc()}}},sk.length>0);
+
+  const ze=Object.entries(e.byZona).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  draw('zona','cZona',{type:'bar',
+    data:{labels:ze.map(([k])=>k),datasets:[{data:ze.map(([,v])=>v),backgroundColor:'#FF4B2B',borderRadius:6,borderSkipped:false}]},
+    options:{...base,plugins:{legend:{display:false}},scales:{x:sc(),y:{...sc(),beginAtZero:true,ticks:{...sc().ticks,precision:0}}}}},ze.length>0);
+
+  const ce=Object.entries(e.byCargo).sort((a,b)=>b[1]-a[1]);
+  draw('cargo','cCargo',{type:'doughnut',
+    data:{labels:ce.map(([k])=>k),datasets:[{data:ce.map(([,v])=>v),backgroundColor:['#FF4B2B','#1DB86A','#F5A623','#3B82F6','#8B5CF6','#EC4899','#14B8A6'],borderWidth:0}]},
+    options:{...base,plugins:{legend:{position:'right',labels:{color:'#8E97C7',font:{size:11},padding:10}}}}},ce.length>0);
+
+  const re=Object.entries(e.byResp).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  draw('resp','cResp',{type:'bar',
+    data:{labels:re.map(([k])=>k),datasets:[{data:re.map(([,v])=>v),backgroundColor:'#3B82F6',borderRadius:6,borderSkipped:false}]},
+    options:{...base,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{...sc(),beginAtZero:true,ticks:{...sc().ticks,precision:0}},y:sc()}}},re.length>0);
+
+  draw('inc','cIncumpl',{type:'bar',
+    data:{labels:e.incumpl.map(([k])=>k),datasets:[{data:e.incumpl.map(([,v])=>v),backgroundColor:'#E83A3A',borderRadius:6,borderSkipped:false}]},
+    options:{...base,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{...sc(),min:0,max:100,ticks:{callback:v=>v+'%',color:'#8E97C7'}},y:sc()}}},e.incumpl.length>0);
+}
+
+function renderTable(rows){
+  const c=document.getElementById('tblContainer');
+  if(!rows.length){c.innerHTML='<div class="empty">Sin datos para el período</div>';return;}
+  const badge=(v,okFn)=>{
+    if(lc(v)==='')return'<span class="b-na">—</span>';
+    return okFn(v)?`<span class="b-ok">${esc(v)}</span>`:`<span class="b-no">${esc(v)}</span>`;
+  };
+  c.innerHTML=`<div class="tbl-wrap"><table>
+    <thead><tr><th>Fecha / Hora</th><th>Tipo</th><th>Responsable</th><th>Trabajador</th><th>Cargo</th><th>Zona / Est.</th><th>Uniforme</th><th>Presentación</th><th>Resultado</th><th>GPS</th></tr></thead>
+    <tbody>${rows.map(r=>{
+      const diaria=isDiaria(r);
+      const gd=parseInt(r[C.GD]);
+      const gps=isNaN(gd)?'<span class="b-na">—</span>':gd<=300?`<span class="b-ok">✓ ${gd} m</span>`:gd<=600?`<span style="color:var(--ylw);font-weight:600;font-size:12px">⚠ ${gd} m</span>`:`<span class="b-no">✗ ${gd} m</span>`;
+      const fails=Object.entries(evalRow(r)).filter(([,ok])=>!ok).map(([k])=>k);
+      const res=fails.length?`<span class="b-no" title="${esc(fails.join(', '))}">${fails.length} incumpl.</span>`:'<span class="b-ok">OK</span>';
+      return`<tr>
+        <td style="white-space:nowrap">${fmtDate(rowDate(r))}<br><small style="color:var(--txt2)">${esc(fmtHora(r[C.HORA]))}</small></td>
+        <td><span class="${diaria?'tipo-d':'tipo-a'}">${diaria?'Diaria':'Aleatoria'}</span></td>
+        <td style="font-size:12px">${esc(shortName(respOf(r))||'—')}</td>
+        <td><div style="font-weight:600;font-size:13px">${esc(String(r[C.NOM]||'—').split(' ').slice(0,3).join(' '))}</div><div style="font-size:11px;color:var(--txt2)">${esc(r[C.RUT])}</div></td>
+        <td style="font-size:12px">${esc(shortCargo(r[C.CARGO]))}</td>
+        <td style="font-size:12px">${esc(r[C.ZONA]||'—')}<br><small style="color:var(--txt2)">${esc(r[C.EST])}</small></td>
+        <td>${badge(r[C.UNIF],R.ok)}</td>
+        <td>${badge(r[C.PRES],R.buena)}</td>
+        <td>${res}</td>
+        <td>${gps}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+Chart.defaults.color='#8E97C7';
+Chart.defaults.borderColor='#2A2F55';
+Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif";
+
+
+// ══ SEGUIMIENTO DE BRECHAS (dashboard) ════════════════════════════
+// ══ BRECHAS · lógica compartida con la otra app (mantener idéntica en fiscalizacion_ms.html y dashboard_fiscalizacion.html) ══
+// Cada fiscalización se descompone en brechas individuales (un ítem por concepto con problema).
+// El ID de la brecha = Timestamp + RUT + concepto, así el seguimiento queda amarrado a esa fiscalización.
+const ESTADOS={PEN:'Pendiente',RES:'Resuelta',COR:'Corregida',GES:'Requiere gestión'};
+const isClosed=e=>e===ESTADOS.RES||e===ESTADOS.COR;
+// Columnas de la hoja "Seguimiento"
+const S={TS:0,ID:1,ESTADO:2,REV:3,OBS:4,LAT:5,LON:6,GD:7,GA:8,RUT:9,NOM:10,EST:11,CONC:12,DET:13,FF:14};
+const brNo=v=>{const s=lc(v);return s.includes('no cumple')||s==='no tiene'||s==='mala';};
+
+function extractBrechas(r){
+  const out=[],base=String(r[C.TS]??'')+'|'+String(r[C.RUT]??'')+'|';
+  const add=(key,cat,concepto,detalle,sev)=>out.push({id:base+key,cat,concepto:String(concepto),detalle:String(detalle||''),sev:sev||'alta'});
+  // Uniforme: una brecha por prenda ("Camisa: Falta; Polar: Desgastado")
+  const pr=String(r[C.PRENDAS]??'').trim();
+  if(pr)pr.split(';').map(x=>x.trim()).filter(Boolean).forEach(x=>{
+    const i=x.indexOf(':'),p=(i<0?x:x.slice(0,i)).trim(),e=i<0?'':x.slice(i+1).trim();
+    add('unif:'+p,'Uniforme',p,e,lc(e).startsWith('desg')?'media':'alta');
+  });
+  else if(brNo(r[C.UNIF]))add('unif','Uniforme','Uniforme incompleto','No cumple');
+  // Credenciales
+  if(brNo(r[C.CREDC]))add('credc','Credenciales','Credencial contratista','No tiene');
+  if(brNo(r[C.CREDOS]))add('credos','Credenciales','Credencial OS-10','No tiene');
+  // EPP: "Calzado dieléctrico: No Cumple (obs) | Chaleco anticorte: Cumple"
+  String(r[C.EPP]??'').split('|').map(x=>x.trim()).filter(Boolean).forEach(x=>{
+    const i=x.indexOf(':');if(i<0)return;
+    const item=x.slice(0,i).trim(),rest=x.slice(i+1).trim();
+    if(lc(rest).startsWith('no cumple')){const m=rest.match(/\((.*)\)\s*$/);add('epp:'+item,'EPP',item,m?m[1]:'No cumple');}
+  });
+  // Equipamiento
+  if(brNo(r[C.RADIO]))add('radio','Equipamiento','Radio de comunicación','No cumple');
+  if(brNo(r[C.MANOS]))add('manos','Equipamiento','Manos libres','No cumple');
+  if(brNo(r[C.LLAVE]))add('llave','Equipamiento','Llave de tímpano / freno','No cumple');
+  // Presentación, directiva, posición
+  if(brNo(r[C.PRES]))add('pres','Presentación','Presentación personal',r[C.PRES_OBS]||'Mala','media');
+  if(brNo(r[C.DIR]))add('dir','Directiva','Directiva de funcionamiento',r[C.DIR_OBS]||'No cumple');
+  if(brNo(r[C.POS]))add('pos','Desempeño','Posición táctica / efectiva','No cumple','media');
+  // Preguntas: respuestas "No" o "Parcial" (usa el texto completo de la pregunta si existe)
+  for(let q=0;q<5;q++){
+    const t=String(r[C.CT1+q]??'').trim();
+    if(t){
+      const j=t.lastIndexOf(' — ');if(j<0)continue;
+      const preg=t.slice(0,j).trim(),m=t.slice(j+3).trim().match(/^(Sí|Parcial|No)\s*(?:\(([\s\S]*)\))?\s*$/);
+      if(m&&m[1]!=='Sí')add('q'+(q+1),'Competencias',preg,m[1]+(m[2]?': '+m[2]:''),m[1]==='No'?'alta':'media');
+    }else if(q<4){
+      const [v,o]=String(r[C.C1+q]??'').split('|');
+      if(v==='No'||v==='Parcial')add('q'+(q+1),'Competencias','Pregunta '+(q+1),v+(o?': '+o:''),v==='No'?'alta':'media');
+    }
+  }
+  if(brNo(r[C.CEL]))add('cel','Conducta','Uso de celular en turno','No cumple','media');
+  return out;
+}
+
+// Une las brechas con su historial de seguimiento. El último registro manda.
+function buildBrechas(rows,seg){
+  const idx={};
+  seg.forEach(s=>{const id=String(s[S.ID]??'');if(id)(idx[id]=idx[id]||[]).push(s);});
+  Object.values(idx).forEach(a=>a.sort((x,y)=>String(x[S.TS]).localeCompare(String(y[S.TS]))));
+  const out=[];
+  rows.forEach(r=>extractBrechas(r).forEach(b=>{
+    const h=idx[b.id]||[],last=h[h.length-1],estado=last?String(last[S.ESTADO]):ESTADOS.PEN;
+    const ct=isClosed(estado)?new Date(String(last[S.TS])):null;
+    out.push({...b,row:r,hist:h,estado,cierre:ct&&!isNaN(ct)?ct:null});
+  }));
+  return out;
+}
+
+
+const dayOf=d=>d?new Date(d.getFullYear(),d.getMonth(),d.getDate()):null;
+const segDate=s=>{const d=new Date(String(s[S.TS]));return isNaN(d)?null:d;};
+const pill=e=>`<span class="pill ${e===ESTADOS.PEN?'p-pend':e===ESTADOS.GES?'p-ges':'p-ok'}">${esc(e)}</span>`;
+function gpsBadge(gd){
+  if(isNaN(gd))return'<span class="b-na">—</span>';
+  if(gd<=300)return`<span class="b-ok">✓ ${gd} m</span>`;
+  if(gd<=600)return`<span style="color:var(--ylw);font-weight:600;font-size:12px">⚠ ${gd} m</span>`;
+  return`<span class="b-no">✗ ${gd} m</span>`;
+}
+const legB={position:'bottom',labels:{color:'#8E97C7',boxWidth:12,padding:14,font:{size:12}}};
+
+function renderBrechasDash(rows){
+  const L=buildBrechas(rows,allSeg);
+  const pen=L.filter(b=>b.estado===ESTADOS.PEN),ges=L.filter(b=>b.estado===ESTADOS.GES),cer=L.filter(b=>isClosed(b.estado));
+  const nCor=cer.filter(b=>b.estado===ESTADOS.COR).length,nRes=cer.length-nCor;
+  const pc=L.length?Math.round(cer.length/L.length*100):null;
+  const dias=cer.map(b=>{const d=rowDate(b.row);return d&&b.cierre?(b.cierre-d)/864e5:null;}).filter(x=>x!==null&&x>=0);
+  const tp=dias.length?dias.reduce((a,b)=>a+b,0)/dias.length:null;
+  const segP=allSeg.filter(s=>inPeriod(dayOf(segDate(s))));
+  const pcc=pc===null?'':pc>=85?'c-ok':pc>=60?'c-warn':'c-bad';
+
+  document.getElementById('brKpi').innerHTML=`
+    <div class="kpi"><div class="kpi-lbl">Brechas detectadas</div><div class="kpi-val c-acc">${L.length}</div><div class="kpi-sub">En fiscalizaciones del período</div></div>
+    <div class="kpi"><div class="kpi-lbl">Pendientes</div><div class="kpi-val ${pen.length?'c-bad':'c-ok'}">${pen.length}</div><div class="kpi-sub">Sin verificar en terreno</div></div>
+    <div class="kpi"><div class="kpi-lbl">En gestión</div><div class="kpi-val c-warn">${ges.length}</div><div class="kpi-sub">No resueltas en terreno</div></div>
+    <div class="kpi"><div class="kpi-lbl">Cerradas</div><div class="kpi-val c-ok">${cer.length}</div><div class="kpi-sub">${nCor} corregidas · ${nRes} resueltas</div></div>
+    <div class="kpi"><div class="kpi-lbl">% de cierre</div><div class="kpi-val ${pcc}">${pc===null?'—':pc+'%'}</div><div class="kpi-sub">Cerradas / detectadas</div></div>
+    <div class="kpi"><div class="kpi-lbl">Días prom. cierre</div><div class="kpi-val c-blu">${tp===null?'—':tp.toFixed(1)}</div><div class="kpi-sub">${segP.length} verificaciones en el período</div></div>`;
+
+  // Estado por categoría
+  const cats=[...new Set(L.map(b=>b.cat))];
+  const cc=cats.map(c=>{const x=L.filter(b=>b.cat===c);return{c,p:x.filter(b=>b.estado===ESTADOS.PEN).length,g:x.filter(b=>b.estado===ESTADOS.GES).length,k:x.filter(b=>isClosed(b.estado)).length};})
+    .sort((a,b)=>(b.p+b.g)-(a.p+a.g)||(b.k-a.k));
+  draw('brcat','cBrCat',{type:'bar',
+    data:{labels:cc.map(x=>x.c),datasets:[
+      {label:'Pendientes',data:cc.map(x=>x.p),backgroundColor:'#E83A3A'},
+      {label:'En gestión',data:cc.map(x=>x.g),backgroundColor:'#F5A623'},
+      {label:'Cerradas',data:cc.map(x=>x.k),backgroundColor:'#1DB86A'}]},
+    options:{...base,indexAxis:'y',plugins:{legend:legB},scales:{x:{...sc(),stacked:true,beginAtZero:true,ticks:{...sc().ticks,precision:0}},y:{...sc(),stacked:true}}}},cc.length>0);
+
+  // Estado general
+  draw('brest','cBrEst',{type:'doughnut',
+    data:{labels:['Pendiente','En gestión','Corregida','Resuelta'],datasets:[{data:[pen.length,ges.length,nCor,nRes],backgroundColor:['#E83A3A','#F5A623','#1DB86A','#3B82F6'],borderWidth:0}]},
+    options:{...base,cutout:'62%',plugins:{legend:legB}}},L.length>0);
+
+  // Cierres por día (según fecha de verificación)
+  const byD={};
+  segP.filter(s=>isClosed(String(s[S.ESTADO]))).forEach(s=>{const d=dayOf(segDate(s));if(!d)return;const k=d.getTime();byD[k]=byD[k]||{c:0,r:0};String(s[S.ESTADO])===ESTADOS.COR?byD[k].c++:byD[k].r++;});
+  const dd=Object.entries(byD).map(([t,v])=>({d:new Date(+t),...v})).sort((a,b)=>a.d-b.d).slice(-30);
+  draw('brdia','cBrDia',{type:'bar',
+    data:{labels:dd.map(x=>fmtDate(x.d).slice(0,5)),datasets:[
+      {label:'Corregidas',data:dd.map(x=>x.c),backgroundColor:'#1DB86A'},
+      {label:'Resueltas',data:dd.map(x=>x.r),backgroundColor:'#3B82F6'}]},
+    options:{...base,plugins:{legend:legB},scales:{x:{...sc(),stacked:true},y:{...sc(),stacked:true,beginAtZero:true,ticks:{...sc().ticks,precision:0}}}}},dd.length>0);
+
+  // Abiertas por zona
+  const zz={};[...pen,...ges].forEach(b=>{const z=b.row[C.ZONA]||'Sin zona';zz[z]=zz[z]||{p:0,g:0};b.estado===ESTADOS.PEN?zz[z].p++:zz[z].g++;});
+  const ze=Object.entries(zz).sort((a,b)=>(b[1].p+b[1].g)-(a[1].p+a[1].g));
+  draw('brzona','cBrZona',{type:'bar',
+    data:{labels:ze.map(([k])=>k),datasets:[
+      {label:'Pendientes',data:ze.map(([,v])=>v.p),backgroundColor:'#E83A3A'},
+      {label:'En gestión',data:ze.map(([,v])=>v.g),backgroundColor:'#F5A623'}]},
+    options:{...base,plugins:{legend:legB},scales:{x:{...sc(),stacked:true},y:{...sc(),stacked:true,beginAtZero:true,ticks:{...sc().ticks,precision:0}}}}},ze.length>0);
+
+  // Tabla: verificaciones recientes
+  const rec=[...segP].sort((a,b)=>String(b[S.TS]).localeCompare(String(a[S.TS]))).slice(0,20);
+  document.getElementById('tblCorr').innerHTML=rec.length?`<div class="tbl-wrap"><table>
+    <thead><tr><th>Fecha / Hora</th><th>Revisor</th><th>Trabajador</th><th>Estación</th><th>Concepto</th><th>Resultado</th><th>Acción / observación</th><th>GPS</th></tr></thead>
+    <tbody>${rec.map(s=>{const d=segDate(s);return`<tr>
+      <td style="white-space:nowrap">${fmtDate(d)}<br><small style="color:var(--txt2)">${d?pad(d.getHours())+':'+pad(d.getMinutes()):''}</small></td>
+      <td style="font-size:12px">${esc(shortName(s[S.REV])||'—')}</td>
+      <td><div style="font-weight:600;font-size:13px">${esc(String(s[S.NOM]||'—').split(' ').slice(0,3).join(' '))}</div><div style="font-size:11px;color:var(--txt2)">${esc(s[S.RUT])}</div></td>
+      <td style="font-size:12px">${esc(s[S.EST]||'—')}</td>
+      <td style="font-size:12px">${esc(s[S.CONC])}${s[S.DET]?`<br><small style="color:var(--txt2)">Detectado: ${esc(s[S.DET])}</small>`:''}</td>
+      <td>${pill(String(s[S.ESTADO]))}</td>
+      <td style="font-size:12px;max-width:300px">${esc(s[S.OBS]||'—')}</td>
+      <td>${gpsBadge(parseInt(s[S.GD]))}</td></tr>`;}).join('')}</tbody></table></div>`
+    :'<div class="empty">Sin verificaciones en el período</div>';
+
+  // Tabla: abiertas más antiguas
+  const now=new Date();
+  const op=[...pen,...ges].map(b=>({b,d:rowDate(b.row)})).sort((a,b)=>(a.d?a.d.getTime():0)-(b.d?b.d.getTime():0)).slice(0,20);
+  document.getElementById('tblOpen').innerHTML=op.length?`<div class="tbl-wrap"><table>
+    <thead><tr><th>Fiscalizada</th><th>Días abierta</th><th>Trabajador</th><th>Zona / Est.</th><th>Concepto</th><th>Estado</th><th>Último seguimiento</th></tr></thead>
+    <tbody>${op.map(({b,d})=>{const r=b.row,n=d?Math.floor((now-d)/864e5):null,last=b.hist[b.hist.length-1];
+      const nc=n===null?'b-na':n>7?'b-no':n>3?'':'b-ok';return`<tr>
+      <td style="white-space:nowrap">${fmtDate(d)}<br><small style="color:var(--txt2)">${esc(shortName(respOf(r)))}</small></td>
+      <td><span class="${nc}" style="${n!==null&&n>3&&n<=7?'color:var(--ylw);font-weight:600;font-size:12px':''}">${n===null?'—':n+' d'}</span></td>
+      <td><div style="font-weight:600;font-size:13px">${esc(String(r[C.NOM]||'—').split(' ').slice(0,3).join(' '))}</div><div style="font-size:11px;color:var(--txt2)">${esc(r[C.RUT])}</div></td>
+      <td style="font-size:12px">${esc(r[C.ZONA]||'—')}<br><small style="color:var(--txt2)">${esc(r[C.EST])}</small></td>
+      <td style="font-size:12px">${esc(b.cat)} · ${esc(b.concepto)}${b.detalle?`<br><small style="color:var(--txt2)">${esc(b.detalle)}</small>`:''}</td>
+      <td>${pill(b.estado)}</td>
+      <td style="font-size:12px;max-width:260px">${last?`${esc(last[S.OBS]||'—')}<br><small style="color:var(--txt2)">${esc(shortName(last[S.REV]))}</small>`:'<span class="b-na">—</span>'}</td></tr>`;}).join('')}</tbody></table></div>`
+    :'<div class="empty">Sin brechas abiertas 🎉</div>';
+}
+
+async function refresh(silent){
+  if(!silent)document.getElementById('lastUpd').textContent='Actualizando...';
+  try{
+    const data=await fetchData();
+    allRows=(data.rows||[]).filter(r=>Array.isArray(r)&&r.some(c=>c!==''&&c!==null));
+    allSeg=(data.seg||[]).filter(r=>Array.isArray(r)&&r[S.ID]);
+    if(!('seg' in data))showBanner('⚠️ El Apps Script aún no entrega la hoja <code>Seguimiento</code>. Actualiza el script para ver las correcciones en terreno.');
+    else hideBanner();
+    // Si no hay nada esta semana pero sí hay histórico, abrir en "Todo" (sólo en la carga manual)
+    if(!silent&&period==='week'&&allRows.length&&!filter(allRows).length)period='all';
+    setPeriod(period);
+    document.getElementById('lastUpd').innerHTML='<span class="live"></span>En vivo · '+new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+  }catch(err){
+    if(silent){console.warn(err);return;}
+    document.getElementById('lastUpd').textContent='Error al cargar';
+    showBanner('⚠️ '+esc(err.message));
+    document.getElementById('kpiGrid').innerHTML='<div class="kpi" style="grid-column:1/-1;text-align:center;color:var(--txt2)">No se pudieron cargar los datos</div>';
+    console.error(err);
+  }
+}
+refresh();
+// Tiempo real: refresco automático cada 60 s (sólo con la pestaña visible)
+setInterval(()=>{if(!document.hidden)refresh(true);},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh(true);});
+</script>
+</body>
+</html>
